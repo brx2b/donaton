@@ -1,10 +1,26 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
-
-#logo{
-  font-family: "Noto Sans",sans-serif;
-  font-optical-sizing: auto;
+/* Config global */
+@import url('https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap');
+body{
+  margin: 0;
+  padding: 0;
+}
+#root{
+  font-family: "Rethink Sans", sans-serif;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  background-color:rgb(207, 219, 213);
+}
+
+/* Topbar */
+#logo{
+  padding: 2vh;
+  margin: 5px
+}
+#TopBar{
+  display: flex;
+  
+}
+#TopBar label{
+  margin: 2vh;
+  text-align: center;
 }
