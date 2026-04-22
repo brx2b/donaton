@@ -14,13 +14,24 @@ body{
 /* Topbar */
 #logo{
   padding: 2vh;
-  margin: 5px
+  margin: 10px
 }
+
 #TopBar{
   display: flex;
-  
+  flex-direction: row;
+  align-items: center;
 }
-#TopBar label{
+#TopBar section{
+  margin-left: 20px;
+}
+#login{
+  z-index: 99;
+  background-color: antiquewhite;
+  padding: 5vh;
+  margin-left: 20vh;
+}
+#TopBar label {
   margin: 2vh;
   text-align: center;
 }
