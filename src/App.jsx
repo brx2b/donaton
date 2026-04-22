@@ -10,9 +10,7 @@ export default function App() {
 
   return (
     <>
-      <section id="logo">
-        <h1>Donaton</h1>
-      </section>
+      
     </>
   );
 }
