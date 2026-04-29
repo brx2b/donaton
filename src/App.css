@@ -23,7 +23,8 @@ body{
   align-items: center;
   justify-content: space-between;
   font-size: 3.1vh;
-  background-color:rgb(207, 219, 213);
+  background-color: #CFDBD5;
+  
 }
 #login{
   z-index: 99;
@@ -31,9 +32,20 @@ body{
   padding: 5vh;
   display: flex;
   gap: 6vh;
+  
 }
 #TopBar #opciones{
   display: flex;
   flex-direction: row;
   gap: 8vh;
+  
+}
+.NavLink{
+  text-decoration: none;
+  color: black;
+  
+}
+.NavLink:hover{
+  color: blueviolet;
+  cursor: pointer;
 }

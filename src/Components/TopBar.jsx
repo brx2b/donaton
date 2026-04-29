@@ -6,14 +6,18 @@ export default function TopBar() {
       <div id="TopBar">
         <h1 id="logo">Donaton</h1>
         <section id="opciones">
-          <NavLink to="/Inicio">
+          <NavLink className={"NavLink"} to="/Inicio">
             <label>Inicio</label>
           </NavLink>
-          <NavLink to="/solicitudes">
+          <NavLink className={"NavLink"} to="/solicitudes">
             <label>Solicitudes</label>
           </NavLink>
-          <label>Sedes</label>
-          <label>Nosotros</label>
+          <NavLink className={"NavLink"} to="/Sedes">
+            <label>Sedes</label>
+          </NavLink>
+          <NavLink className={"NavLink"} to="/Nosotros">
+            <label>Nosotros</label>
+          </NavLink>
         </section>
         <section id="login">
           <label>Login</label>
