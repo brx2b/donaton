@@ -8,7 +8,7 @@ body{
 #root{
   font-family: "Rethink Sans", sans-serif;
   font-style: normal;
-  
+  background-color: #f4e9cd;
 }
 
 /* Topbar */
@@ -23,12 +23,14 @@ body{
   align-items: center;
   justify-content: space-between;
   font-size: 3.1vh;
-  background-color: #CFDBD5;
-  
+  background-color: #9dbebb;
+  margin-bottom: 5vh;
+  border-bottom: black solid 1px;
+  box-shadow: 0vh 0.1vh 0.5vh 0.2vh black;
 }
 #login{
   z-index: 99;
-  background-color: antiquewhite;
+  background-color: #77aca2;
   padding: 5vh;
   display: flex;
   gap: 6vh;
@@ -43,9 +45,123 @@ body{
 .NavLink{
   text-decoration: none;
   color: black;
-  
 }
-.NavLink:hover{
+.NavLink:hover,
+.NavLink:hover *{
   color: blueviolet;
   cursor: pointer;
+}
+
+/* Inicio */
+#contenedor-inicial{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+#tarjeta-inicial{
+  border: black solid 1px;
+  width: calc(80vh / 1);
+  padding: 5vh;
+  margin: 5vh;
+  box-shadow: 5px 10px 0.8vh 0.5vh black;
+  cursor: default;
+  background-color: white;
+}
+#parrafo-inicial{
+  font-size: 2.5vh;
+  line-height: 3.5vh;
+}
+#parrafo-inicial, strong{
+  font-size: 3vh;
+  line-height: 4vh;
+}
+#tarjetas-bajo{
+  margin-top: 8vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.GlareHoverStyle{
+  margin: 3vh;
+  width: 30vh;
+  transition: transform 0.5s ease;
+}
+.GlareHoverStyle:hover{
+
+  transform: scale(1.1);
+}
+/* Footer */
+#footer{
+  background-color: #9dbebb;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 4vh;
+  margin-top: 0;
+  font-weight: 500;
+  font-size: 3vh;
+  border-top: black solid 1px;
+  box-shadow: 0vh -0.1vh 0.5vh 0.2vh rgba(0, 0, 0, 0.279);
+}
+
+
+/* CONFIG GLARE NO TOCAR */
+.glare-hover {
+  width: var(--gh-width);
+  height: var(--gh-height);
+  background: var(--gh-bg);
+  border-radius: var(--gh-br);
+  border: 1px solid var(--gh-border);
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.glare-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    var(--gh-angle),
+    hsla(0, 0%, 0%, 0) 60%,
+    var(--gh-rgba) 70%,
+    hsla(0, 0%, 0%, 0),
+    hsla(0, 0%, 0%, 0) 100%
+  );
+  transition: var(--gh-duration) ease;
+  background-size:
+    var(--gh-size) var(--gh-size),
+    100% 100%;
+  background-repeat: no-repeat;
+  background-position:
+    -100% -100%,
+    0 0;
+}
+
+.glare-hover:hover {
+  cursor: pointer;
+}
+
+.glare-hover:hover::before {
+  background-position:
+    100% 100%,
+    0 0;
+}
+
+.glare-hover--play-once::before {
+  transition: none;
+}
+
+.glare-hover--play-once:hover::before {
+  transition: var(--gh-duration) ease;
+  background-position:
+    100% 100%,
+    0 0;
 }

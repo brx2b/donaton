@@ -9,7 +9,7 @@ export default function TopBar() {
           <NavLink className={"NavLink"} to="/Inicio">
             <label>Inicio</label>
           </NavLink>
-          <NavLink className={"NavLink"} to="/solicitudes">
+          <NavLink className={"NavLink"} to="/Solicitudes">
             <label>Solicitudes</label>
           </NavLink>
           <NavLink className={"NavLink"} to="/Sedes">
