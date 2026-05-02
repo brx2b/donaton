@@ -110,6 +110,36 @@ body{
   box-shadow: 0vh -0.1vh 0.5vh 0.2vh rgba(0, 0, 0, 0.279);
 }
 
+/* Nosotros */
+#contenedor-inicial-nosotros{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  
+  justify-content: center;
+  align-items: center;
+}
+#tarjeta-inicial-nosotros{
+  border: black solid 1px;
+  width: 100vh;
+  padding: 5vh;
+  margin: 5vh;
+  box-shadow: 5px 10px 0.8vh 0.5vh black;
+  cursor: default;
+  background-color: white;
+  
+}
+#img-1{
+  position: inherit;
+  width: 13vh;
+  margin-left: 33vh;
+}
+#img-2{
+  position: inherit;
+  width: 13vh;
+  margin-left: 55vh;
+}
+
 
 /* CONFIG GLARE NO TOCAR */
 .glare-hover {

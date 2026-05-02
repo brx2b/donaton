@@ -1,4 +1,4 @@
-import GlareHover from "./GlareHover";
+import GlareHover from "../GlareHover";
 import { NavLink } from "react-router-dom";
 export default function Inicio() {
   return (
