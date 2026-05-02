@@ -20,8 +20,12 @@ export default function TopBar() {
           </NavLink>
         </section>
         <section id="login">
-          <label>Login</label>
-          <label>Registro</label>
+          <NavLink className={"NavLink"} to="/Login">
+            <label>Login</label>
+          </NavLink>
+          <NavLink className={"NavLink"} to="/Register">
+            <label>Registro</label>
+          </NavLink>
         </section>
       </div>
     </>

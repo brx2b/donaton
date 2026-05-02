@@ -45,11 +45,13 @@ body{
 .NavLink{
   text-decoration: none;
   color: black;
+  transition: transform 0.4s linear;
 }
 .NavLink:hover,
 .NavLink:hover *{
   color: blueviolet;
   cursor: pointer;
+  transform: scale(1.1);
 }
 
 /* Inicio */
@@ -127,7 +129,6 @@ body{
   box-shadow: 5px 10px 0.8vh 0.5vh black;
   cursor: default;
   background-color: white;
-  
 }
 #img-1{
   position: inherit;
@@ -139,6 +140,31 @@ body{
   width: 13vh;
   margin-left: 55vh;
 }
+
+/* Sedes */
+#contenedor-sedes{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+#sedes-tarjeta{
+  border: black solid 1px;
+  width: 45%;
+  padding: 3vh;
+  margin: 5vh;
+  box-shadow: 5px 10px 0.8vh 0.5vh black;
+  cursor: default;
+  background-color: white;
+}
+.img-lugar{
+  width: 100%;
+  height: 35%;
+}
+
+/* en inicio detras de los botones negros colcoar un fondo de alguna sede o imagen con blur para 
+dar mejor uso del espacio */
 
 
 /* CONFIG GLARE NO TOCAR */
