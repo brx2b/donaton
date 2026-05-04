@@ -1,4 +1,4 @@
-import GlareHover from "./GlareHover";
+import GlareHover from "../GlareHover";
 import { NavLink } from "react-router-dom";
 export default function Inicio() {
   return (
@@ -22,11 +22,12 @@ export default function Inicio() {
           </strong>
         </div>
         <div id="tarjeta-inicial">
-          <h1>Tu granito de arena</h1>
+          <h1>Diferentes formas de ayudar</h1>
           <strong id="parrafo-inicial">
-            Cada pequeña contribución cuenta y puede marcar una gran diferencia
-            en la vida de alguien. Al donar, estás ayudando a proporcionar
-            recursos esenciales, como alimentos, refugio y atención médica.
+            Además de las donaciones monetarias, también puedes contribuir con
+            comida, ropa, voluntariado o compartiendo nuestras campañas en tus
+            redes sociales. Cada acción cuenta y puede marcar una gran
+            diferencia en la vida de alguien que lo necesita.
           </strong>
         </div>
       </div>
