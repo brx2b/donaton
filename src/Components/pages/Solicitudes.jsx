@@ -4,8 +4,8 @@ export default function Solicitudes() {
   if (session == null) {
     return (
       <>
-        <div>
-          <h1>Inicia sesión para ver tus solicitudes</h1>
+        <div id="contenedor-iniciar">
+          <h1>Inicia sesión para ver las solicitudes</h1>
         </div>
         <div id="footer">
           <footer>
