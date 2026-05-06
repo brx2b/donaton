@@ -190,6 +190,34 @@ dar mejor uso del espacio */
   margin: 10vh auto;
   padding: 10rem;
 }
+#ListaSolicitudes {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60%;
+  height: 80%;
+  padding: 20px;
+  box-shadow: 10px 6px 5px black;
+  width: 50%;
+  background: white;
+  margin: 0 auto;
+  border: black solid 1px;
+  gap: 20px;
+}
+#botonDetalles {
+  min-width: 1vh;
+  width: 100%;
+  padding: 1vh;
+  border: solid black 0;
+  border-bottom: black solid 1px;
+  box-shadow: 5px 5px 1px black;
+}
+.contenedorSolicitud {
+  margin: 20px;
+}
+#headerSolicitudes {
+}
 /* LOGIN */
 #contenedor-login {
   display: flex;
