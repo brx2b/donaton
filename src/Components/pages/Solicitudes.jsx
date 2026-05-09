@@ -13,6 +13,8 @@ export default function Solicitudes() {
   const [donacionStatus, setDonacionStatus] = useState(null);
   const [error, setError] = useState(null);
 
+  const [errorCarga, setErrorCarga] = useState(false);
+
   useEffect(() => {
     if (session) {
       cargarSolicitudes();
@@ -30,9 +32,13 @@ export default function Solicitudes() {
         await cargarUsuarios(usuarioIds);
       } else {
         console.error("Error al cargar solicitudes:", data.error);
+        alert("Verifica el backend si esta en ejecución");
+        setErrorCarga(true);
       }
     } catch (error) {
       console.error("Error de conexión:", error);
+      alert("Verifica el BFF que este en ejecución!");
+      setErrorCarga(true);
     }
     setLoading(false);
   };
@@ -130,9 +136,7 @@ export default function Solicitudes() {
     return (
       <>
         <div>
-          <h1 id="contenedor-iniciar">
-            Inicia sesión para ver tus solicitudes
-          </h1>
+          <h1 id="contenedor-iniciar">Inicia sesión para ver solicitudes</h1>
         </div>
         <div id="footer">
           <footer>
@@ -150,6 +154,13 @@ export default function Solicitudes() {
       <h1 id="headerSolicitudes">Solicitudes de ayuda humanitaria</h1>
       {loading && <p id="cargando">Cargando solicitudes...</p>}
       <div id="ListaSolicitudes">
+        {errorCarga && (
+          <div id="errorCargaMsg">
+            <h1>
+              Ha ocurrido un error al cargar, verifica el backend y el BFF.
+            </h1>
+          </div>
+        )}
         {solicitudesAMostrar.map((solicitud, index) => {
           const usuario = usuarios[solicitud.usuarioId];
           return (
