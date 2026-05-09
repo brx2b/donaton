@@ -4,12 +4,16 @@ import { useEffect, useState } from "react";
 export default function TopBar() {
   const [isLogged, setIsLogged] = useState(false);
   const location = useLocation();
-
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLogged(Boolean(token));
+    if (token == null) {
+      console.log("NO LOGING");
+      setIsLogged(false);
+    } else {
+      console.log("SI LOGIN");
+      setIsLogged(true);
+    }
   }, [location]);
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.reload();
