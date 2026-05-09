@@ -42,7 +42,9 @@ export default function Solicitudes() {
     await Promise.all(
       usuarioIds.map(async (id) => {
         try {
-          const response = await fetch(`http://localhost:4000/api/usuarios/${id}`);
+          const response = await fetch(
+            `http://localhost:4000/api/usuarios/${id}`,
+          );
           const data = await response.json();
           if (response.ok) {
             usuariosData[id] = data.data;
@@ -89,18 +91,21 @@ export default function Solicitudes() {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/api/donaciones/donar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "http://localhost:4000/api/donaciones/donar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            usuarioId,
+            monto: montoNumero,
+            fecha: new Date().toISOString().slice(0, 10),
+            tipo: "INDIVIDUAL",
+          }),
         },
-        body: JSON.stringify({
-          usuarioId,
-          monto: montoNumero,
-          fecha: new Date().toISOString().slice(0, 10),
-          tipo: "INDIVIDUAL",
-        }),
-      });
+      );
       const data = await response.json();
       if (response.ok) {
         setDonacionStatus("Donación registrada correctamente.");
@@ -125,7 +130,9 @@ export default function Solicitudes() {
     return (
       <>
         <div>
-          <h1 id="contenedor-iniciar">Inicia sesión para ver tus solicitudes</h1>
+          <h1 id="contenedor-iniciar">
+            Inicia sesión para ver tus solicitudes
+          </h1>
         </div>
         <div id="footer">
           <footer>
@@ -153,7 +160,9 @@ export default function Solicitudes() {
               <p id="sedeSolicitud">{solicitud.sede}</p>
               <h5>Realizado por:</h5>
               <p>
-                {usuario ? `${usuario.nombre} (${usuario.email})` : "Cargando..."}
+                {usuario
+                  ? `${usuario.nombre} (${usuario.email})`
+                  : "Cargando..."}
               </p>
               <button id="botonDetalles" onClick={() => abrirDrawer(solicitud)}>
                 Donar
@@ -210,7 +219,8 @@ export default function Solicitudes() {
           {donacionStatus && <p className="drawer-success">{donacionStatus}</p>}
           {error && <p className="drawer-error">{error}</p>}
           <p className="drawer-note">
-            Nota: para este sistema, las donaciones individuales deben ser superiores a $1.000.
+            Nota: para este sistema, las donaciones individuales deben ser
+            superiores a $1.000.
           </p>
         </div>
       </div>
