@@ -1,6 +1,8 @@
 import GlareHover from "../GlareHover";
 import { NavLink } from "react-router-dom";
 export default function Inicio() {
+  const urlfondo =
+    "https://videocdn.cdnpk.net/videos/4eaffa96-2836-5cc3-aec7-b60bddbbab53/horizontal/thumbnails/large.jpg?semt=ais_hybrid&item_id=6457017&w=740&q=80";
   return (
     <>
       <div id="contenedor-inicial">
@@ -31,80 +33,84 @@ export default function Inicio() {
           </strong>
         </div>
       </div>
-      <div id="tarjetas-bajo">
-        <div style={{ height: "600px", position: "relative" }}>
-          <NavLink className={"NavLink"} to="/Nosotros">
-            <GlareHover
-              className="GlareHoverStyle"
-              glareColor="#ffffff"
-              glareOpacity={0.3}
-              glareAngle={-30}
-              glareSize={300}
-              transitionDuration={800}
-              playOnce={false}
-            >
-              <h2
-                style={{
-                  fontSize: "3rem",
-                  fontWeight: "900",
-                  color: "#ffffff",
-                  margin: 0,
-                }}
+
+      <div>
+        <div id="tarjetas-bajo">
+          <div style={{ height: "600px", position: "relative" }}>
+            <NavLink className={"NavLink"} to="/Nosotros">
+              <GlareHover
+                className="GlareHoverStyle"
+                glareColor="#ffffff"
+                glareOpacity={0.3}
+                glareAngle={-30}
+                glareSize={300}
+                transitionDuration={800}
+                playOnce={false}
               >
-                Nosotros
-              </h2>
-            </GlareHover>
-          </NavLink>
-        </div>
-        <div style={{ height: "600px", position: "relative" }}>
-          <NavLink className={"NavLink"} to="/Sedes">
-            <GlareHover
-              className="GlareHoverStyle"
-              glareColor="#ffffff"
-              glareOpacity={0.3}
-              glareAngle={-30}
-              glareSize={300}
-              transitionDuration={800}
-              playOnce={false}
-            >
-              <h2
-                style={{
-                  fontSize: "3rem",
-                  fontWeight: "900",
-                  color: "#ffffff",
-                  margin: 0,
-                }}
+                <h2
+                  style={{
+                    fontSize: "3rem",
+                    fontWeight: "900",
+                    color: "#ffffff",
+                    margin: 0,
+                  }}
+                >
+                  Nosotros
+                </h2>
+              </GlareHover>
+            </NavLink>
+          </div>
+          <div style={{ height: "600px", position: "relative" }}>
+            <NavLink className={"NavLink"} to="/Sedes">
+              <GlareHover
+                className="GlareHoverStyle"
+                glareColor="#ffffff"
+                glareOpacity={0.3}
+                glareAngle={-30}
+                glareSize={300}
+                transitionDuration={800}
+                playOnce={false}
               >
-                Sedes
-              </h2>
-            </GlareHover>
-          </NavLink>
-        </div>
-        <div style={{ height: "600px", position: "relative" }}>
-          <NavLink className={"NavLink"} to="/solicitudes">
-            <GlareHover
-              className="GlareHoverStyle"
-              glareColor="#ffffff"
-              glareOpacity={0.3}
-              glareAngle={-30}
-              glareSize={300}
-              transitionDuration={800}
-              playOnce={false}
-            >
-              <h2
-                style={{
-                  fontSize: "3rem",
-                  fontWeight: "900",
-                  color: "#ffffff",
-                  margin: 0,
-                }}
+                <h2
+                  style={{
+                    fontSize: "3rem",
+                    fontWeight: "900",
+                    color: "#ffffff",
+                    margin: 0,
+                  }}
+                >
+                  Sedes
+                </h2>
+              </GlareHover>
+            </NavLink>
+          </div>
+          <div style={{ height: "600px", position: "relative" }}>
+            <NavLink className={"NavLink"} to="/solicitudes">
+              <GlareHover
+                className="GlareHoverStyle"
+                glareColor="#ffffff"
+                glareOpacity={0.3}
+                glareAngle={-30}
+                glareSize={300}
+                transitionDuration={800}
+                playOnce={false}
               >
-                Solicitudes
-              </h2>
-            </GlareHover>
-          </NavLink>
+                <h2
+                  style={{
+                    fontSize: "3rem",
+                    fontWeight: "900",
+                    color: "#ffffff",
+                    margin: 0,
+                  }}
+                >
+                  Solicitudes
+                </h2>
+              </GlareHover>
+            </NavLink>
+          </div>
         </div>
       </div>
+
       <div id="footer">
         <footer>
           <p>Sitio web desarrollado por brx2b</p>
