@@ -7,6 +7,11 @@ export default function Solicitudes() {
   const [usuarios, setUsuarios] = useState({});
   const [mostrarCantidad, setMostrarCantidad] = useState(5);
   const [loading, setLoading] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+  const [monto, setMonto] = useState(0);
+  const [donacionStatus, setDonacionStatus] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (session) {
@@ -21,8 +26,7 @@ export default function Solicitudes() {
       const data = await response.json();
       if (response.ok) {
         setSolicitudes(data.data);
-        // Obtener usuarios únicos
-        const usuarioIds = [...new Set(data.data.map(s => s.usuarioId))];
+        const usuarioIds = [...new Set(data.data.map((s) => s.usuarioId))];
         await cargarUsuarios(usuarioIds);
       } else {
         console.error("Error al cargar solicitudes:", data.error);
@@ -46,9 +50,71 @@ export default function Solicitudes() {
         } catch (error) {
           console.error(`Error al cargar usuario ${id}:`, error);
         }
-      })
+      }),
     );
     setUsuarios(usuariosData);
+  };
+
+  const abrirDrawer = (solicitud) => {
+    setSelectedSolicitud(solicitud);
+    setMonto(1500);
+    setDonacionStatus(null);
+    setError(null);
+    setDrawerOpen(true);
+  };
+
+  const cerrarDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedSolicitud(null);
+    setMonto(0);
+    setError(null);
+    setDonacionStatus(null);
+  };
+
+  const confirmarDonacion = async () => {
+    setError(null);
+    setDonacionStatus(null);
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Debe iniciar sesión para donar");
+      return;
+    }
+
+    const usuarioId = token.replace(/^usr/, "");
+    const montoNumero = Number(monto);
+    if (!montoNumero || montoNumero <= 0) {
+      setError("Ingrese un monto válido mayor a 0");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/api/donaciones/donar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usuarioId,
+          monto: montoNumero,
+          fecha: new Date().toISOString().slice(0, 10),
+          tipo: "INDIVIDUAL",
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setDonacionStatus("Donación registrada correctamente.");
+        setTimeout(() => {
+          cerrarDrawer();
+          cargarSolicitudes();
+        }, 1600);
+      } else {
+        setError(data.error || data || "No se pudo procesar la donación");
+      }
+    } catch (error) {
+      console.error("Error al registrar donación:", error);
+      setError("Error de conexión con el BFF");
+    }
   };
 
   const cargarMas = () => {
@@ -59,9 +125,7 @@ export default function Solicitudes() {
     return (
       <>
         <div>
-          <h1 id="contenedor-iniciar">
-            Inicia sesión para ver tus solicitudes
-          </h1>
+          <h1 id="contenedor-iniciar">Inicia sesión para ver tus solicitudes</h1>
         </div>
         <div id="footer">
           <footer>
@@ -77,7 +141,7 @@ export default function Solicitudes() {
   return (
     <>
       <h1 id="headerSolicitudes">Solicitudes de ayuda humanitaria</h1>
-      {loading && <p>Cargando solicitudes...</p>}
+      {loading && <p id="cargando">Cargando solicitudes...</p>}
       <div id="ListaSolicitudes">
         {solicitudesAMostrar.map((solicitud, index) => {
           const usuario = usuarios[solicitud.usuarioId];
@@ -89,9 +153,11 @@ export default function Solicitudes() {
               <p id="sedeSolicitud">{solicitud.sede}</p>
               <h5>Realizado por:</h5>
               <p>
-                {usuario ? `${usuario.nombre} (${usuario.email})` : 'Cargando...'}
+                {usuario ? `${usuario.nombre} (${usuario.email})` : "Cargando..."}
               </p>
-              <button id="botonDetalles">Más detalles</button>
+              <button id="botonDetalles" onClick={() => abrirDrawer(solicitud)}>
+                Donar
+              </button>
             </div>
           );
         })}
@@ -101,10 +167,52 @@ export default function Solicitudes() {
           Cargar más
         </button>
       )}
+
       <div id="footer">
         <footer>
           <p>Sitio web desarrollado por brx2b</p>
         </footer>
+      </div>
+
+      <div className={`drawer ${drawerOpen ? "open" : ""}`}>
+        <div className="drawer-content">
+          <button className="drawer-close" onClick={cerrarDrawer}>
+            ×
+          </button>
+          <h2>Donar a esta solicitud</h2>
+          {selectedSolicitud && (
+            <>
+              <p>
+                <strong>Solicitud:</strong> {selectedSolicitud.desc}
+              </p>
+              <p>
+                <strong>Sede:</strong> {selectedSolicitud.sede}
+              </p>
+              <p>
+                <strong>Solicitante:</strong>{" "}
+                {usuarios[selectedSolicitud.usuarioId]
+                  ? `${usuarios[selectedSolicitud.usuarioId].nombre}`
+                  : "Cargando..."}
+              </p>
+            </>
+          )}
+          <label htmlFor="montoDonacion">Monto a donar ($)</label>
+          <input
+            id="montoDonacion"
+            type="number"
+            min="1"
+            value={monto}
+            onChange={(e) => setMonto(e.target.value)}
+          />
+          <button className="drawer-action" onClick={confirmarDonacion}>
+            Confirmar donación
+          </button>
+          {donacionStatus && <p className="drawer-success">{donacionStatus}</p>}
+          {error && <p className="drawer-error">{error}</p>}
+          <p className="drawer-note">
+            Nota: para este sistema, las donaciones individuales deben ser superiores a $1.000.
+          </p>
+        </div>
       </div>
     </>
   );
