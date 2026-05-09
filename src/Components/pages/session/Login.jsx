@@ -5,6 +5,7 @@ import { validation } from "../../../utils/Validators.jsx";
 import { useState } from "react";
 export default function Login() {
   const navigate = useNavigate();
+  const [admin, setAdmin] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
     password: "",
@@ -17,6 +18,7 @@ export default function Login() {
       peticion: "manejarLogin",
       datos: formData,
       navigate: navigate,
+      setAdmin,
     });
   };
   const handleChange = (e) => {

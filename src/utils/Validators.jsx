@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export function validation({ peticion, datos, navigate }) {
+export function validation({ peticion, datos, navigate, setAdmin }) {
   //url cambiar segpun entorno
   const URL_BFF = "http://localhost:4000";
 
@@ -47,8 +47,16 @@ export function validation({ peticion, datos, navigate }) {
         if (respuesta.ok) {
           console.log("Login correcto!");
           const token = resultado.data;
-          localStorage.setItem("token", "usr" + token.id);
-          console.log(localStorage.getItem("token"));
+          if (token.rol == "admin") {
+            localStorage.setItem("token", "adm" + token.id);
+            setAdmin(true);
+            alert("Iniciando como admin!");
+          } else {
+            localStorage.setItem("token", "usr" + token.id);
+            console.log(localStorage.getItem("token"));
+            alert("Bienvenido!");
+          }
+
           navigate("/"); // Redirigir a la página principal después del login
         } else {
           console.error("Error en login", resultado.error);
