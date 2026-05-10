@@ -48,7 +48,7 @@ export default function Historial() {
 
   return (
     <div>
-      <h1>Historial de Donaciones</h1>
+      <h1 id="headerHistorial">Historial de Donaciones</h1>
       <div style={{ display: "flex", flexDirection: "column", gap: "2vh" }}>
         {donaciones.map((donacion) => (
           <div

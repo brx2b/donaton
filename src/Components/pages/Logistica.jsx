@@ -1,4 +1,13 @@
 import { useEffect, useState } from "react";
+import "../../App.css";
+
+const sortCarga = (carga) => {
+  return [...carga].sort((a, b) => {
+    const nameA = a.nombre?.trim().toLowerCase() || "~";
+    const nameB = b.nombre?.trim().toLowerCase() || "~";
+    return nameA.localeCompare(nameB);
+  });
+};
 
 export default function Logistica() {
   const [envios, setEnvios] = useState([]);
@@ -9,7 +18,7 @@ export default function Logistica() {
     chofer: "",
     destino: "",
     matricula: "",
-    origen: ""
+    origen: "",
   });
 
   useEffect(() => {
@@ -43,38 +52,42 @@ export default function Logistica() {
         },
       });
       if (!response.ok) throw new Error("Error al eliminar envío");
-      fetchEnvios(); // Refresh list
+      fetchEnvios();
     } catch (err) {
       alert(err.message);
     }
   };
 
-  const addItem = () => {
-    setNewEnvio(prev => ({
-      ...prev,
-      carga: [...prev.carga, { nombre: "", cantidad: "" }]
-    }));
+  const updateCarga = (index, field, value) => {
+    setNewEnvio((prev) => {
+      const carga = prev.carga.map((item, idx) =>
+        idx === index ? { ...item, [field]: value } : item,
+      );
+      return { ...prev, carga: sortCarga(carga) };
+    });
   };
 
-  const updateItem = (index, field, value) => {
-    setNewEnvio(prev => ({
+  const addItem = () => {
+    setNewEnvio((prev) => ({
       ...prev,
-      carga: prev.carga.map((item, i) => i === index ? { ...item, [field]: value } : item)
+      carga: sortCarga([...prev.carga, { nombre: "", cantidad: "" }]),
     }));
   };
 
   const removeItem = (index) => {
-    setNewEnvio(prev => ({
+    setNewEnvio((prev) => ({
       ...prev,
-      carga: prev.carga.filter((_, i) => i !== index)
+      carga: prev.carga.filter((_, idx) => idx !== index),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ordenar carga alfabéticamente por nombre
-    const sortedCarga = [...newEnvio.carga].sort((a, b) => a.nombre.localeCompare(b.nombre));
-    const envioData = { ...newEnvio, carga: sortedCarga };
+    const envioPayload = {
+      ...newEnvio,
+      carga: sortCarga(newEnvio.carga),
+    };
+
     try {
       const response = await fetch("/api/logistica", {
         method: "POST",
@@ -82,7 +95,7 @@ export default function Logistica() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(envioData),
+        body: JSON.stringify(envioPayload),
       });
       if (!response.ok) throw new Error("Error al registrar envío");
       setNewEnvio({
@@ -90,9 +103,9 @@ export default function Logistica() {
         chofer: "",
         destino: "",
         matricula: "",
-        origen: ""
+        origen: "",
       });
-      fetchEnvios(); // Refresh list
+      fetchEnvios();
     } catch (err) {
       alert(err.message);
     }
@@ -103,84 +116,132 @@ export default function Logistica() {
 
   return (
     <div>
-      <h1>Logística</h1>
-      <div id="tarjeta-inicial" style={{ marginBottom: '5vh' }}>
-        <h2>Registrar Nuevo Envío</h2>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2vh' }}>
-          <div>
-            <label>Carga:</label>
+      <h1 id="headerLogistica">Logística</h1>
+      <div id="tarjeta-inicial" className="logistica-form">
+        <h2>Registrar envío</h2>
+        <form onSubmit={handleSubmit} className="logistica-form-grid">
+          <div className="logistica-section">
+            <label className="logistica-label">Carga</label>
             {newEnvio.carga.map((item, index) => (
-              <div key={index} style={{ display: 'flex', gap: '1vh', alignItems: 'center', marginBottom: '1vh' }}>
+              <div key={index} className="logistica-item-row">
                 <input
                   type="text"
-                  placeholder="Nombre del item"
+                  placeholder="Nombre item"
                   value={item.nombre}
-                  onChange={(e) => updateItem(index, 'nombre', e.target.value)}
+                  onChange={(e) => updateCarga(index, "nombre", e.target.value)}
                   required
-                  style={{ flex: 1 }}
+                  className="logistica-input"
                 />
                 <input
                   type="number"
                   placeholder="Cantidad"
                   value={item.cantidad}
-                  onChange={(e) => updateItem(index, 'cantidad', e.target.value)}
-                  required
                   min="1"
-                  style={{ width: '10vh' }}
+                  onChange={(e) =>
+                    updateCarga(index, "cantidad", e.target.value)
+                  }
+                  required
+                  className="logistica-input logistica-input-small"
                 />
                 {newEnvio.carga.length > 1 && (
-                  <button type="button" onClick={() => removeItem(index)} style={{ background: 'red', color: 'white' }}>X</button>
+                  <button
+                    type="button"
+                    className="logistica-remove"
+                    onClick={() => removeItem(index)}
+                  >
+                    ×
+                  </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={addItem} style={{ marginTop: '1vh' }}>+ Añadir Item</button>
+            <button
+              type="button"
+              className="logistica-add-item"
+              onClick={addItem}
+            >
+              + Añadir item
+            </button>
           </div>
-          <div style={{ display: 'flex', gap: '2vh', flexWrap: 'wrap' }}>
+
+          <div className="logistica-section logistica-fieldset">
+            <label className="logistica-label">Chofer</label>
             <input
               type="text"
-              placeholder="Chofer"
               value={newEnvio.chofer}
-              onChange={(e) => setNewEnvio({ ...newEnvio, chofer: e.target.value })}
+              onChange={(e) =>
+                setNewEnvio({ ...newEnvio, chofer: e.target.value })
+              }
               required
+              className="logistica-input"
             />
+            <label className="logistica-label">Destino</label>
             <input
               type="text"
-              placeholder="Destino"
               value={newEnvio.destino}
-              onChange={(e) => setNewEnvio({ ...newEnvio, destino: e.target.value })}
+              onChange={(e) =>
+                setNewEnvio({ ...newEnvio, destino: e.target.value })
+              }
               required
+              className="logistica-input"
             />
+            <label className="logistica-label">Matrícula</label>
             <input
               type="text"
-              placeholder="Matrícula"
               value={newEnvio.matricula}
-              onChange={(e) => setNewEnvio({ ...newEnvio, matricula: e.target.value })}
+              onChange={(e) =>
+                setNewEnvio({ ...newEnvio, matricula: e.target.value })
+              }
               required
+              className="logistica-input"
             />
+            <label className="logistica-label">Origen</label>
             <input
               type="text"
-              placeholder="Origen"
               value={newEnvio.origen}
-              onChange={(e) => setNewEnvio({ ...newEnvio, origen: e.target.value })}
+              onChange={(e) =>
+                setNewEnvio({ ...newEnvio, origen: e.target.value })
+              }
               required
+              className="logistica-input"
             />
+            <button type="submit" className="logistica-button">
+              Registrar envío
+            </button>
           </div>
-          <button type="submit" style={{ alignSelf: 'flex-start', background: '#77aca2', color: 'white', padding: '1vh 2vh', border: 'none', cursor: 'pointer' }}>Registrar Envío</button>
         </form>
       </div>
-      <h2>Envíos Registrados</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2vh' }}>
+
+      <div className="logistica-list">
         {envios.map((envio) => (
-          <div key={envio.id} id="tarjeta-inicial" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div key={envio.id} id="tarjeta-inicial" className="logistica-card">
             <div>
-              <strong>ID:</strong> {envio.id}<br />
-              <strong>Carga:</strong> {envio.carga ? envio.carga.map(item => `${item.nombre} ${item.cantidad}`).join(', ') : 'N/A'}<br />
-              <strong>Chofer:</strong> {envio.chofer || 'N/A'}<br />
-              <strong>Destino:</strong> {envio.destino || 'N/A'}<br />
-              <strong>Matrícula:</strong> {envio.matricula || 'N/A'}<br />
-              <strong>Origen:</strong> {envio.origen || 'N/A'}
+              <p>
+                <strong>Chofer:</strong> {envio.chofer || "N/A"}
+              </p>
+              <p>
+                <strong>Destino:</strong> {envio.destino || "N/A"}
+              </p>
+              <p>
+                <strong>Matrícula:</strong> {envio.matricula || "N/A"}
+              </p>
+              <p>
+                <strong>Origen:</strong> {envio.origen || "N/A"}
+              </p>
+              <p>
+                <strong>Carga:</strong>{" "}
+                {envio.carga
+                  ? envio.carga
+                      .map((item) => `${item.nombre} ${item.cantidad}`)
+                      .join(", ")
+                  : "N/A"}
+              </p>
             </div>
-            <button onClick={() => handleDelete(envio.id)} style={{ background: 'red', color: 'white', border: 'none', padding: '1vh', cursor: 'pointer' }}>Eliminar</button>
+            <button
+              className="logistica-button logistica-delete"
+              onClick={() => handleDelete(envio.id)}
+            >
+              Eliminar
+            </button>
           </div>
         ))}
       </div>
