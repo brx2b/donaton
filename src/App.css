@@ -338,6 +338,12 @@ dar mejor uso del espacio */
   padding: 1vh;
   text-align: center;
   margin-left: 5vh;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  justify-content: center;
+  justify-items: center;
+  justify-self: center;
 }
 #headerHistorial{
   border: black solid 1px;
@@ -346,6 +352,7 @@ dar mejor uso del espacio */
   padding: 1vh;
   text-align: center;
   margin-left: 5vh;
+  
 }
 /* LOGIN */
 #contenedor-login {

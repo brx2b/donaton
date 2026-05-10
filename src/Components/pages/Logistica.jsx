@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
-
+import { validation, URL_BFF } from "../../utils/Validators";
 const sortCarga = (carga) => {
   return [...carga].sort((a, b) => {
     const nameA = a.nombre?.trim().toLowerCase() || "~";
@@ -27,7 +27,8 @@ export default function Logistica() {
 
   const fetchEnvios = async () => {
     try {
-      const response = await fetch("/api/logistica", {
+      const response = await fetch(`${URL_BFF}/api/logistica`, {
+        // ← CORREGIDO
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -42,20 +43,14 @@ export default function Logistica() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = (matricula) => {
     if (!confirm("¿Estás seguro de eliminar este envío?")) return;
-    try {
-      const response = await fetch(`/api/logistica/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (!response.ok) throw new Error("Error al eliminar envío");
-      fetchEnvios();
-    } catch (err) {
-      alert(err.message);
-    }
+
+    validation({
+      peticion: "eliminarLogistica",
+      datos: matricula, // ← pasas el ID
+      setEnvios: setEnvios, // ← para que recargue la lista
+    });
   };
 
   const updateCarga = (index, field, value) => {
@@ -83,32 +78,19 @@ export default function Logistica() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const envioPayload = {
       ...newEnvio,
       carga: sortCarga(newEnvio.carga),
     };
 
-    try {
-      const response = await fetch("/api/logistica", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(envioPayload),
-      });
-      if (!response.ok) throw new Error("Error al registrar envío");
-      setNewEnvio({
-        carga: [{ nombre: "", cantidad: "" }],
-        chofer: "",
-        destino: "",
-        matricula: "",
-        origen: "",
-      });
-      fetchEnvios();
-    } catch (err) {
-      alert(err.message);
-    }
+    // Usamos validation como en el resto de la aplicación
+    validation({
+      peticion: "manejarLogistica",
+      datos: envioPayload, // ← los datos del formulario
+      setNewEnvio: setNewEnvio, // ← para limpiar el formulario
+      setEnvios: setEnvios, // ← para recargar la lista
+    });
   };
 
   if (loading) return <div>Cargando...</div>;
@@ -213,7 +195,11 @@ export default function Logistica() {
 
       <div className="logistica-list">
         {envios.map((envio) => (
-          <div key={envio.id} id="tarjeta-inicial" className="logistica-card">
+          <div
+            key={envio.matricula || envio.id}
+            id="tarjeta-inicial"
+            className="logistica-card"
+          >
             <div>
               <p>
                 <strong>Chofer:</strong> {envio.chofer || "N/A"}
@@ -238,7 +224,7 @@ export default function Logistica() {
             </div>
             <button
               className="logistica-button logistica-delete"
-              onClick={() => handleDelete(envio.id)}
+              onClick={() => handleDelete(envio.matricula)}
             >
               Eliminar
             </button>
