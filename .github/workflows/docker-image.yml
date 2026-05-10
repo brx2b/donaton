@@ -1,24 +1,26 @@
-name: CI/CD Frontend - React
+name: CI/CD Frontend - Donaton
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
     paths:
       - "frontend/**"
+  workflow_dispatch:
 
 jobs:
-  build-push-deploy-frontend:
+  build-and-deploy-frontend:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar credenciales AWS
+      - name: Configurar credenciales AWS (Academy)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}   # ← Necesario en Academy
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login a Amazon ECR
@@ -26,23 +28,29 @@ jobs:
 
       - name: Build y Push Frontend a ECR
         run: |
+          echo "🏗️ Construyendo imagen del Frontend..."
           cd frontend
-          docker build -t frontend-app .
-          docker tag frontend-app:latest ${{ secrets.ECR_REPO_FRONTEND }}:latest
-          docker push ${{ secrets.ECR_REPO_FRONTEND }}:latest
+          
+          docker build -t frontdonaton .
+          
+          echo "📤 Subiendo imagen a ECR..."
+          docker tag frontdonaton:latest ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
+          docker push ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
 
-      - name: Desplegar en EC2 vía SSM
+      - name: Desplegar Frontend en EC2 vía SSM
         run: |
           aws ssm send-command \
             --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
-            --comment "Actualizar Frontend" \
+            --comment "Actualizar Frontend Donaton" \
             --parameters '{"commands":[
               "set -e",
+              "cd /home/ubuntu/frontend || true",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-              "docker pull ${{ secrets.ECR_REPO_FRONTEND }}:latest",
-              "docker stop frontend || true",
-              "docker rm frontend || true",
-              "docker run -d --name frontend -p 3000:80 ${{ secrets.ECR_REPO_FRONTEND }}:latest"
+              "docker pull ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest",
+              "docker stop frontdonaton || true",
+              "docker rm frontdonaton || true",
+              "docker run -d --name frontdonaton -p 3000:80 ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest",
+              "echo \"$(date) - Frontend actualizado correctamente\" >> deploy.log"
             ]}' \
             --output text
