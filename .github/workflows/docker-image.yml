@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy-frontend:
+  build-push-deploy-frontend:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,29 +20,25 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}   # ← Necesario en Academy
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login a Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build y Push Frontend a ECR
+      - name: Build imagen Frontend y Push a ECR
         run: |
-          echo "🏗️ Construyendo imagen del Frontend..."
           cd frontend
-          
           docker build -t frontdonaton .
-          
-          echo "📤 Subiendo imagen a ECR..."
           docker tag frontdonaton:latest ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
           docker push ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
 
-      - name: Desplegar Frontend en EC2 vía SSM
+      - name: Desplegar Frontend vía SSM en EC2
         run: |
           aws ssm send-command \
             --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
-            --comment "Actualizar Frontend Donaton" \
+            --comment "Actualizar Frontend Donaton desde ECR" \
             --parameters '{"commands":[
               "set -e",
               "cd /home/ubuntu/frontend || true",
