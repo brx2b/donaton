@@ -68,6 +68,16 @@ body {
   flex-wrap: wrap;
 }
 
+
+/* logistica */
+#headerLogistica{
+  border: black solid 1px;
+  background-color: white;
+  width: 40%;
+  padding: 1vh;
+  text-align: center;
+  margin-left: 5vh;
+}
 #tarjeta-inicial {
   border: black solid 1px;
   width: calc(80vh / 1);
@@ -76,6 +86,90 @@ body {
   box-shadow: 5px 10px 0.8vh 0.5vh black;
   cursor: default;
   background-color: white;
+}
+#tarjeta-inicial.logistica-card {
+  width: 100%;
+  padding: 3vh;
+  margin: 2vh 0;
+}
+.logistica-form {
+  width: calc(100% - 6vh);
+  margin: 0 auto 5vh;
+  padding: 3vh;
+  background-color: white;
+}
+.logistica-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2vh;
+}
+@media (min-width: 900px) {
+  .logistica-form-grid {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+.logistica-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+}
+.logistica-label {
+  font-weight: 700;
+  font-size: 1.8vh;
+}
+.logistica-input {
+  width: 100%;
+  padding: 1.2vh;
+  border: none;
+  border-bottom: black solid 1px;
+  box-shadow: 3px 3px 1px black;
+}
+.logistica-input-small {
+  width: 12vh;
+}
+.logistica-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  flex-wrap: wrap;
+}
+.logistica-add-item,
+.logistica-button {
+  width: fit-content;
+  padding: 1vh 2vh;
+  border: none;
+  background-color: #77aca2;
+  color: black;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 3px 3px 1px black;
+}
+.logistica-add-item:hover,
+.logistica-button:hover,
+.logistica-delete:hover,
+.logistica-remove:hover {
+  background-color: #5e8c7f;
+}
+.logistica-remove {
+  background-color: #d9534f;
+  color: white;
+  width: 3.5vh;
+  height: 3.5vh;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5vh;
+}
+.logistica-delete {
+  background-color: #d9534f;
+  color: white;
+  align-self: flex-start;
+}
+.logistica-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  width: calc(100% - 6vh);
+  margin: 0 auto 5vh;
 }
 #parrafo-inicial {
   font-size: 2.5vh;
@@ -238,17 +332,20 @@ dar mejor uso del espacio */
   padding-bottom: 10px;
 }
 #headerSolicitudes {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  flex-wrap: wrap;
   border: black solid 1px;
   background-color: white;
-  width: 50%;
-  margin: 2vh auto;
-  padding: 2vh;
-  flex-direction: column;
-  align-items: center;
+  width: 40%;
+  padding: 1vh;
+  text-align: center;
+  margin-left: 5vh;
+}
+#headerHistorial{
+  border: black solid 1px;
+  background-color: white;
+  width: 40%;
+  padding: 1vh;
+  text-align: center;
+  margin-left: 5vh;
 }
 /* LOGIN */
 #contenedor-login {
@@ -328,6 +425,8 @@ dar mejor uso del espacio */
 #botonDetalles:hover {
   color: blueviolet;
 }
+
+
 
 /* BARA LATERAL  */
 

@@ -1,5 +1,7 @@
 import GlareHover from "../GlareHover";
 import { NavLink } from "react-router-dom";
+import "../../App.css";
+import React from "react";
 export default function Inicio() {
   const urlfondo =
     "https://videocdn.cdnpk.net/videos/4eaffa96-2836-5cc3-aec7-b60bddbbab53/horizontal/thumbnails/large.jpg?semt=ais_hybrid&item_id=6457017&w=740&q=80";

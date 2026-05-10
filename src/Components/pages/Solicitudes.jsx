@@ -10,6 +10,7 @@ export default function Solicitudes() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedSolicitud, setSelectedSolicitud] = useState(null);
   const [monto, setMonto] = useState(0);
+  const [tipo, setTipo] = useState("individual");
   const [donacionStatus, setDonacionStatus] = useState(null);
   const [error, setError] = useState(null);
 
@@ -75,6 +76,7 @@ export default function Solicitudes() {
     setDrawerOpen(false);
     setSelectedSolicitud(null);
     setMonto(0);
+    setTipo("individual");
     setError(null);
     setDonacionStatus(null);
   };
@@ -95,6 +97,14 @@ export default function Solicitudes() {
       setError("Ingrese un monto válido mayor a 0");
       return;
     }
+    if (tipo === "empresa" && montoNumero <= 10000) {
+      setError("Las donaciones de empresa deben ser superiores a $10.000.");
+      return;
+    }
+    if (tipo === "individual" && montoNumero <= 1000) {
+      setError("Las donaciones individuales deben ser superiores a $1.000.");
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -108,7 +118,7 @@ export default function Solicitudes() {
             usuarioId,
             monto: montoNumero,
             fecha: new Date().toISOString().slice(0, 10),
-            tipo: "INDIVIDUAL",
+            tipo: tipo.toUpperCase(),
           }),
         },
       );
@@ -131,6 +141,27 @@ export default function Solicitudes() {
   const cargarMas = () => {
     setMostrarCantidad((prev) => prev + 5);
   };
+
+  const handleDeleteSolicitud = async (id) => {
+    if (!confirm("¿Estás seguro de eliminar esta solicitud?")) return;
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/necesidades/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Error al eliminar solicitud");
+      cargarSolicitudes(); // Refresh list
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const isAdmin = localStorage.getItem("setAdmin") === "true";
 
   if (session == null) {
     return (
@@ -178,6 +209,21 @@ export default function Solicitudes() {
               <button id="botonDetalles" onClick={() => abrirDrawer(solicitud)}>
                 Donar
               </button>
+              {isAdmin && (
+                <button
+                  onClick={() => handleDeleteSolicitud(solicitud.id)}
+                  style={{
+                    background: "red",
+                    color: "white",
+                    border: "none",
+                    padding: "0.5vh 1vh",
+                    marginLeft: "1vh",
+                    cursor: "pointer",
+                  }}
+                >
+                  Eliminar
+                </button>
+              )}
             </div>
           );
         })}
@@ -216,6 +262,16 @@ export default function Solicitudes() {
               </p>
             </>
           )}
+          <label htmlFor="tipoDonacion">Tipo de donación</label>
+          <select
+            id="tipoDonacion"
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+            required
+          >
+            <option value="individual">Individual</option>
+            <option value="empresa">Empresa</option>
+          </select>
           <label htmlFor="montoDonacion">Monto a donar ($)</label>
           <input
             id="montoDonacion"
@@ -230,8 +286,8 @@ export default function Solicitudes() {
           {donacionStatus && <p className="drawer-success">{donacionStatus}</p>}
           {error && <p className="drawer-error">{error}</p>}
           <p className="drawer-note">
-            Nota: para este sistema, las donaciones individuales deben ser
-            superiores a $1.000.
+            Nota: Las donaciones individuales deben ser superiores a $1.000. Las
+            donaciones de empresa deben ser superiores a $10.000.
           </p>
         </div>
       </div>
