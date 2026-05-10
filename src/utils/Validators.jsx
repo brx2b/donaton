@@ -49,10 +49,13 @@ export function validation({ peticion, datos, navigate, setAdmin }) {
           const token = resultado.data;
           if (token.rol == "admin") {
             localStorage.setItem("token", "adm" + token.id);
+            localStorage.setItem("setAdmin", "true");
             setAdmin(true);
             alert("Iniciando como admin!");
           } else {
             localStorage.setItem("token", "usr" + token.id);
+            localStorage.setItem("setAdmin", "false");
+            setAdmin(false);
             console.log(localStorage.getItem("token"));
             alert("Bienvenido!");
           }
