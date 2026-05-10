@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
-import React from "react";
+import { URL_BFF } from "../../utils/Validators.jsx";
+
 export default function Historial() {
   const [donaciones, setDonaciones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +13,7 @@ export default function Historial() {
 
   const fetchDonaciones = async () => {
     try {
-      const response = await fetch("/api/donaciones", {
+      const response = await fetch(`${URL_BFF}/api/donaciones`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -30,7 +31,7 @@ export default function Historial() {
   const handleDelete = async (id) => {
     if (!confirm("¿Estás seguro de eliminar esta donación?")) return;
     try {
-      const response = await fetch(`/api/donaciones/${id}`, {
+      const response = await fetch(`${URL_BFF}/api/donaciones/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

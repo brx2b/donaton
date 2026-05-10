@@ -1,6 +1,6 @@
 import "../../App.css";
 import { useState, useEffect } from "react";
-
+import { validation } from "../../utils/Validators.jsx";
 export default function Solicitudes() {
   const session = localStorage.getItem("token");
   const [solicitudes, setSolicitudes] = useState([]);
@@ -25,20 +25,23 @@ export default function Solicitudes() {
   const cargarSolicitudes = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/necesidades");
+      const response = await fetch(`http://localhost:4000/api/necesidades`);
       const data = await response.json();
+
       if (response.ok) {
-        setSolicitudes(data.data);
+        setSolicitudes(data.data || []);
         const usuarioIds = [...new Set(data.data.map((s) => s.usuarioId))];
         await cargarUsuarios(usuarioIds);
       } else {
-        console.error("Error al cargar solicitudes:", data.error);
-        alert("Verifica el backend si esta en ejecución");
+        console.error("Error al cargar solicitudes:", data);
+        alert("Error del servidor: " + (data.error || "Desconocido"));
         setErrorCarga(true);
       }
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert("Verifica el BFF que este en ejecución!");
+      alert(
+        "No se puede conectar con el BFF.\n¿Está corriendo el contenedor de Docker?",
+      );
       setErrorCarga(true);
     }
     setLoading(false);
