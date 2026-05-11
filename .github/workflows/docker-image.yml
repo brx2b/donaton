@@ -26,27 +26,31 @@ jobs:
       - name: Login a Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build imagen Frontend y Push a ECR
+      - name: Build y Push Frontend a ECR
         run: |
+          echo " Construyendo Frontend..."
           cd frontend
+          
           docker build -t frontdonaton .
-          docker tag frontdonaton:latest ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
-          docker push ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest
+          
+          echo "Subiendo a ECR..."
+          docker tag frontdonaton:latest ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest
+          docker push ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest
 
-      - name: Desplegar Frontend vía SSM en EC2
+      - name: Desplegar Frontend en EC2 vía SSM
         run: |
           aws ssm send-command \
-            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --instance-ids ${{ secrets.EC2_FRONTEND_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
-            --comment "Actualizar Frontend Donaton desde ECR" \
+            --comment "Actualizar Frontend Donaton" \
             --parameters '{"commands":[
               "set -e",
               "cd /home/ubuntu/frontend || true",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-              "docker pull ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest",
+              "docker pull ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest",
               "docker stop frontdonaton || true",
               "docker rm frontdonaton || true",
-              "docker run -d --name frontdonaton -p 3000:80 ${{ secrets.ECR_REGISTRY }}/frontDonaton:latest",
+              "docker run -d --name frontdonaton -p 3000:80 ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest",
               "echo \"$(date) - Frontend actualizado correctamente\" >> deploy.log"
             ]}' \
             --output text
