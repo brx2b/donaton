@@ -29,7 +29,6 @@ jobs:
       - name: Build y Push Frontend a ECR
         run: |
           echo " Construyendo Frontend..."
-          cd frontend
           
           docker build -t frontdonaton .
           
