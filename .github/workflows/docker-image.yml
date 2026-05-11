@@ -28,7 +28,7 @@ jobs:
 
       - name: Build y Push Frontend a ECR
         env:
-          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }}   # ← Usa el secret tal como está
+          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }} 
         run: |
           echo "Usando URL completa: $ECR_FULL_URL"
           
@@ -41,19 +41,29 @@ jobs:
           echo "Imagen subida correctamente: $ECR_FULL_URL:latest"
 
       - name: Desplegar Frontend en EC2 vía SSM
+        env:
+          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }} 
+          IMAGE_NAME: frontenddonaton
         run: |
+          FULL_IMAGE="${ECR_FULL_URL}/${IMAGE_NAME}:latest"
+          
+          echo "Enviando comando de despliegue a EC2..."
+          echo "Imagen: $FULL_IMAGE"
+          
           aws ssm send-command \
             --instance-ids ${{ secrets.EC2_FRONTEND_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
             --comment "Actualizar Frontend Donaton" \
             --parameters '{"commands":[
               "set -e",
+              "echo \"$(date) - Iniciando despliegue\" >> /home/ubuntu/deploy.log",
               "cd /home/ubuntu/frontend || true",
               "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-              "docker pull ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest",
+              "docker pull '"$FULL_IMAGE"'",
               "docker stop frontdonaton || true",
               "docker rm frontdonaton || true",
-              "docker run -d --name frontdonaton -p 80:80 ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest",
-              "echo \"$(date) - Frontend actualizado correctamente en puerto 80\" >> deploy.log"
+              "docker run -d --name frontdonaton -p 80:80 '"$FULL_IMAGE"'",
+              "echo \"$(date) - Frontend actualizado correctamente con $FULL_IMAGE\" >> /home/ubuntu/deploy.log",
+              "docker ps | grep frontdonaton"
             ]}' \
             --output text
