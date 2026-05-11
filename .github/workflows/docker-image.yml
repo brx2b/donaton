@@ -42,13 +42,12 @@ jobs:
 
       - name: Desplegar Frontend en EC2 vía SSM
         env:
-          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }}
-          IMAGE_NAME: frontenddonaton
+          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }}   # Ya incluye el nombre del repo
           INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
         run: |
-          FULL_IMAGE="${ECR_FULL_URL}/${IMAGE_NAME}:latest"
+          FULL_IMAGE="${ECR_FULL_URL}:latest"
           
-          echo "🚀 Desplegando: $FULL_IMAGE"
+          echo "🚀 Desplegando imagen: $FULL_IMAGE"
           
           aws ssm send-command \
             --instance-ids "$INSTANCE_ID" \
@@ -57,17 +56,19 @@ jobs:
             --parameters '{
               "commands": [
                 "set -e",
-                "mkdir -p /home/ec2-user",
                 "cd /home/ec2-user",
                 "echo \"$(date) - Iniciando despliegue\" >> deploy.log",
-                "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-                "docker pull '"${FULL_IMAGE}"'",
+                "echo \"$(date) - Login ECR\" >> deploy.log",
+                "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }} 2>&1 | tee -a deploy.log",
+                "echo \"$(date) - Pulling imagen\" >> deploy.log",
+                "docker pull '"${FULL_IMAGE}"' 2>&1 | tee -a deploy.log",
+                "echo \"$(date) - Limpiando contenedor anterior\" >> deploy.log",
                 "docker stop frontdonaton || true",
                 "docker rm frontdonaton || true",
-                "docker run -d --name frontdonaton -p 80:80 --restart unless-stopped '"${FULL_IMAGE}"'",
-                "echo \"$(date) - Frontend actualizado correctamente con ${FULL_IMAGE}\" >> deploy.log",
-                "echo \"=== Contenedores corriendo ===\"",
-                "docker ps | grep frontdonaton || echo \"No se inició el contenedor\""
+                "echo \"$(date) - Iniciando contenedor\" >> deploy.log",
+                "docker run -d --name frontdonaton -p 80:80 --restart unless-stopped '"${FULL_IMAGE}"' 2>&1 | tee -a deploy.log",
+                "echo \"$(date) - Despliegue finalizado\" >> deploy.log",
+                "docker ps | grep frontdonaton >> deploy.log || echo \"No se inició contenedor\" >> deploy.log"
               ]
             }' \
             --output text
