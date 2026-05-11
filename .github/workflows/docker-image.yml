@@ -27,14 +27,17 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build y Push Frontend a ECR
+        env:
+          ECR_REPO_URL: ${{ secrets.ECR_REPO_URL_FRONTEND }}
         run: |
-          echo " Construyendo Frontend..."
+          echo "Construyendo Frontend..."
           
-          docker build -t frontdonaton .
+          docker build -t $ECR_REPO_URL:latest .
           
-          echo "Subiendo a ECR..."
-          docker tag frontdonaton:latest ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest
-          docker push ${{ secrets.ECR_REPO_URL_FRONTEND }}:latest
+          echo "Subiendo imagen a ECR..."
+          docker push $ECR_REPO_URL:latest
+          
+          echo "Imagen subida correctamente: $ECR_REPO_URL:latest"
 
       - name: Desplegar Frontend en EC2 vía SSM
         run: |
