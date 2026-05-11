@@ -51,7 +51,7 @@ jobs:
           echo "Imagen: $FULL_IMAGE"
           
           aws ssm send-command \
-            --instance-ids ${{ secrets.EC2_FRONTEND_INSTANCE_ID }} \
+            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
             --document-name "AWS-RunShellScript" \
             --comment "Actualizar Frontend Donaton" \
             --parameters '{"commands":[
