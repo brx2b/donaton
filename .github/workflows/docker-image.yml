@@ -28,16 +28,18 @@ jobs:
 
       - name: Build y Push Frontend a ECR
         env:
-          ECR_REPO_URL: ${{ secrets.ECR_REPO_URL_FRONTEND }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}     # ← Usa este secret que ya tienes
+          IMAGE_NAME: frontdonaton                       # ← Nombre del repositorio en ECR
         run: |
           echo "Construyendo Frontend..."
           
-          docker build -t $ECR_REPO_URL:latest .
+          # Build con tag completo
+          docker build -t ${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:latest .
           
-          echo "Subiendo imagen a ECR..."
-          docker push $ECR_REPO_URL:latest
+          echo "Subiendo a ECR..."
+          docker push ${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:latest
           
-          echo "Imagen subida correctamente: $ECR_REPO_URL:latest"
+          echo "Imagen subida correctamente: ${{ secrets.ECR_REGISTRY }}/$IMAGE_NAME:latest"
 
       - name: Desplegar Frontend en EC2 vía SSM
         run: |
