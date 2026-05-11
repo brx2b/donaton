@@ -42,28 +42,32 @@ jobs:
 
       - name: Desplegar Frontend en EC2 vía SSM
         env:
-          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }} 
+          ECR_FULL_URL: ${{ secrets.ECR_REGISTRY }}
           IMAGE_NAME: frontenddonaton
+          INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
         run: |
           FULL_IMAGE="${ECR_FULL_URL}/${IMAGE_NAME}:latest"
           
-          echo "Enviando comando de despliegue a EC2..."
-          echo "Imagen: $FULL_IMAGE"
+          echo "🚀 Desplegando: $FULL_IMAGE"
           
           aws ssm send-command \
-            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
             --comment "Actualizar Frontend Donaton" \
-            --parameters '{"commands":[
-              "set -e",
-              "echo \"$(date) - Iniciando despliegue\" >> /home/ubuntu/deploy.log",
-              "cd /home/ubuntu/frontend || true",
-              "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-              "docker pull '"$FULL_IMAGE"'",
-              "docker stop frontdonaton || true",
-              "docker rm frontdonaton || true",
-              "docker run -d --name frontdonaton -p 80:80 '"$FULL_IMAGE"'",
-              "echo \"$(date) - Frontend actualizado correctamente con $FULL_IMAGE\" >> /home/ubuntu/deploy.log",
-              "docker ps | grep frontdonaton"
-            ]}' \
+            --parameters '{
+              "commands": [
+                "set -e",
+                "mkdir -p /home/ec2-user",
+                "cd /home/ec2-user",
+                "echo \"$(date) - Iniciando despliegue\" >> deploy.log",
+                "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
+                "docker pull '"${FULL_IMAGE}"'",
+                "docker stop frontdonaton || true",
+                "docker rm frontdonaton || true",
+                "docker run -d --name frontdonaton -p 80:80 --restart unless-stopped '"${FULL_IMAGE}"'",
+                "echo \"$(date) - Frontend actualizado correctamente con ${FULL_IMAGE}\" >> deploy.log",
+                "echo \"=== Contenedores corriendo ===\"",
+                "docker ps | grep frontdonaton || echo \"No se inició el contenedor\""
+              ]
+            }' \
             --output text
