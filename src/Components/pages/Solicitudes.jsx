@@ -215,35 +215,40 @@ export default function Solicitudes() {
         return (
           <>
             <h1 id="headerSolicitudes">Solicitudes de ayuda humanitaria</h1>
-            <div key={solicitud.id || index} className="contenedorSolicitud">
-              <h5>Solicitud:</h5>
-              <p id="descSolicitud">{solicitud.desc}</p>
-              <h5>Sede:</h5>
-              <p id="sedeSolicitud">{solicitud.sede}</p>
-              <h5>Realizado por:</h5>
-              <p>
-                {usuario
-                  ? `${usuario.nombre} (${usuario.email})`
-                  : "Cargando..."}
-              </p>
-              <button id="botonDetalles" onClick={() => abrirDrawer(solicitud)}>
-                Donar
-              </button>
-              {isAdmin && (
+            <div id="ListaSolicitudes">
+              <div key={solicitud.id || index} className="contenedorSolicitud">
+                <h5>Solicitud:</h5>
+                <p id="descSolicitud">{solicitud.desc}</p>
+                <h5>Sede:</h5>
+                <p id="sedeSolicitud">{solicitud.sede}</p>
+                <h5>Realizado por:</h5>
+                <p>
+                  {usuario
+                    ? `${usuario.nombre} (${usuario.email})`
+                    : "Cargando..."}
+                </p>
                 <button
-                  onClick={() => handleDeleteSolicitud(solicitud.id)}
-                  style={{
-                    background: "red",
-                    color: "white",
-                    border: "none",
-                    padding: "0.5vh 1vh",
-                    marginLeft: "1vh",
-                    cursor: "pointer",
-                  }}
+                  id="botonDetalles"
+                  onClick={() => abrirDrawer(solicitud)}
                 >
-                  Eliminar
+                  Donar
                 </button>
-              )}
+                {isAdmin && (
+                  <button
+                    onClick={() => handleDeleteSolicitud(solicitud.id)}
+                    style={{
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      padding: "0.5vh 1vh",
+                      marginLeft: "1vh",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                )}
+              </div>
             </div>
             <div id="footer">
               <footer>

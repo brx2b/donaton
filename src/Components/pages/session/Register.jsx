@@ -12,12 +12,14 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      setErrorMessage("Las contraseñas no coinciden");
       return;
     }
     console.log("llamando BFF: ", formData);
@@ -25,6 +27,7 @@ export default function Register() {
       peticion: "manejarRegistro",
       datos: formData,
       navigate: navigate,
+      setError: setErrorMessage,
     });
   };
   const handleChange = (e) => {
@@ -65,6 +68,7 @@ export default function Register() {
             placeholder="Confirmar contraseña"
           />
           <button type="submit">Registrarse</button>
+          {errorMessage && <p className="form-error">{errorMessage}</p>}
         </form>
       </div>
       <div id="footer">
