@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const URL_BFF = "http://52.87.217.73:4000";
+export const URL_BFF = "http://localhost:4000";
 
 export function validation({
   peticion,

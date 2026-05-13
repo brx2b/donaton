@@ -14,8 +14,27 @@ body {
 #logo {
   padding: 2vh;
   margin: 2vh;
+  text-decoration: none;
+  color: black;
+  text-decoration-line: none;
 }
-
+#logoNav{
+  text-decoration: none;
+  
+}
+#logo{
+  transition: color 0.5s ease-out;
+  transition: box-shadow 0.5s ease-out;
+  color:black;  
+  box-shadow: -1px 1px 0px black;
+}
+#logo:hover{
+  
+  transition: box-shadow 0.5s ease-in;
+  transition: color 0.5s ease;
+  box-shadow: -5px 5px 0px black;
+  color: white;
+}
 #TopBar {
   display: flex;
   flex-direction: row;
@@ -314,7 +333,7 @@ dar mejor uso del espacio */
   box-shadow: 10px 6px 5px black;
   width: 50%;
   background: white;
-  margin: 0 auto;
+  margin: 5rem auto;
   border: black solid 1px;
   gap: 15px;
 }
@@ -340,10 +359,11 @@ dar mejor uso del espacio */
   margin-left: 5vh;
   display: flex;
   flex-wrap: wrap;
-  margin: 0 auto;
+  margin: 5rem auto;
   justify-content: center;
   justify-items: center;
   justify-self: center;
+
 }
 #headerHistorial{
   border: black solid 1px;
@@ -433,6 +453,18 @@ dar mejor uso del espacio */
   color: blueviolet;
 }
 
+/* cargando */
+
+.cargandoScreen{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  justify-items: center;
+  height: 100%;
+  padding: 30vh;
+}
 
 
 /* BARA LATERAL  */
