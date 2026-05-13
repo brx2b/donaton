@@ -27,7 +27,11 @@ export default function TopBar() {
   return (
     <>
       <div id="TopBar">
-        <h1 id="logo">Donaton</h1>
+        <NavLink id="logoNav">
+          <h1 id="logo" to="/">
+            Donaton
+          </h1>
+        </NavLink>
         <section id="opciones">
           <NavLink className={"NavLink"} to="/">
             <label>Inicio</label>

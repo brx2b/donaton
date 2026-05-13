@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
 import { validation, URL_BFF } from "../../utils/Validators";
+import { BarLoader } from "react-spinners";
 const sortCarga = (carga) => {
   return [...carga].sort((a, b) => {
     const nameA = a.nombre?.trim().toLowerCase() || "~";
@@ -28,7 +29,6 @@ export default function Logistica() {
   const fetchEnvios = async () => {
     try {
       const response = await fetch(`${URL_BFF}/api/logistica`, {
-        // ← CORREGIDO
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -93,8 +93,33 @@ export default function Logistica() {
     });
   };
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading)
+    return (
+      <>
+        <div className="cargandoScreen">
+          <h1>Cargando...</h1>
+          <BarLoader height={10} width={400} />
+        </div>
+        <div id="footer">
+          <footer>
+            <p>Sitio web desarrollado por brx2b</p>
+          </footer>
+        </div>
+      </>
+    );
+  if (error)
+    return (
+      <>
+        <div className="cargandoScreen">
+          <h1>Error al cargar, Verifica la conexión del servidor</h1>
+        </div>
+        <div id="footer">
+          <footer>
+            <p>Sitio web desarrollado por brx2b</p>
+          </footer>
+        </div>
+      </>
+    );
 
   return (
     <div>
@@ -230,6 +255,11 @@ export default function Logistica() {
             </button>
           </div>
         ))}
+      </div>
+      <div id="footer">
+        <footer>
+          <p>Sitio web desarrollado por brx2b</p>
+        </footer>
       </div>
     </div>
   );

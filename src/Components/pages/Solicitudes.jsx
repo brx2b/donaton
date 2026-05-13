@@ -1,12 +1,13 @@
 import "../../App.css";
 import { useState, useEffect } from "react";
-import { validation } from "../../utils/Validators.jsx";
+import { validation, URL_BFF } from "../../utils/Validators";
+import { BarLoader } from "react-spinners";
 export default function Solicitudes() {
   const session = localStorage.getItem("token");
   const [solicitudes, setSolicitudes] = useState([]);
   const [usuarios, setUsuarios] = useState({});
   const [mostrarCantidad, setMostrarCantidad] = useState(5);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedSolicitud, setSelectedSolicitud] = useState(null);
   const [monto, setMonto] = useState(0);
@@ -39,9 +40,7 @@ export default function Solicitudes() {
       }
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert(
-        "No se puede conectar con el BFF.\n¿Está corriendo el contenedor de Docker?",
-      );
+
       setErrorCarga(true);
     }
     setLoading(false);
@@ -185,19 +184,37 @@ export default function Solicitudes() {
 
   return (
     <>
-      <h1 id="headerSolicitudes">Solicitudes de ayuda humanitaria</h1>
-      {loading && <p id="cargando">Cargando solicitudes...</p>}
-      <div id="ListaSolicitudes">
-        {errorCarga && (
-          <div id="errorCargaMsg">
-            <h1>
-              Ha ocurrido un error al cargar, verifica el backend y el BFF.
-            </h1>
+      {loading && (
+        <>
+          <div className="cargandoScreen">
+            <h1>Cargando...</h1>
+            <BarLoader height={10} width={400} />
           </div>
-        )}
-        {solicitudesAMostrar.map((solicitud, index) => {
-          const usuario = usuarios[solicitud.usuarioId];
-          return (
+          <div id="footer">
+            <footer>
+              <p>Sitio web desarrollado por brx2b</p>
+            </footer>
+          </div>
+        </>
+      )}
+      {errorCarga && (
+        <>
+          <div className="cargandoScreen">
+            <h1>Error al cargar, Verifica la conexión del servidor</h1>
+          </div>
+          <div id="footer">
+            <footer>
+              <p>Sitio web desarrollado por brx2b</p>
+            </footer>
+          </div>
+        </>
+      )}
+
+      {solicitudesAMostrar.map((solicitud, index) => {
+        const usuario = usuarios[solicitud.usuarioId];
+        return (
+          <>
+            <h1 id="headerSolicitudes">Solicitudes de ayuda humanitaria</h1>
             <div key={solicitud.id || index} className="contenedorSolicitud">
               <h5>Solicitud:</h5>
               <p id="descSolicitud">{solicitud.desc}</p>
@@ -228,20 +245,19 @@ export default function Solicitudes() {
                 </button>
               )}
             </div>
-          );
-        })}
-      </div>
+            <div id="footer">
+              <footer>
+                <p>Sitio web desarrollado por brx2b</p>
+              </footer>
+            </div>
+          </>
+        );
+      })}
       {solicitudes.length > mostrarCantidad && (
         <button onClick={cargarMas} id="botonCargarMas">
           Cargar más
         </button>
       )}
-
-      <div id="footer">
-        <footer>
-          <p>Sitio web desarrollado por brx2b</p>
-        </footer>
-      </div>
 
       <div className={`drawer ${drawerOpen ? "open" : ""}`}>
         <div className="drawer-content">
