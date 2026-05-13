@@ -34,14 +34,18 @@ export function validation({
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
+          if (setError) setError("");
           alert("Registro exitoso!");
           navigate("/");
         } else {
-          alert(resultado.error || "Error en el registro");
+          const mensaje = resultado.error || "Error en el registro";
+          if (setError) setError(mensaje);
+          else alert(mensaje);
         }
       } catch (error) {
         console.error(error);
-        alert("Error de conexión con el servidor");
+        if (setError) setError("Error de conexión con el servidor");
+        else alert("Error de conexión con el servidor");
       }
     };
     ejecutarRegistro();
@@ -60,6 +64,7 @@ export function validation({
         const resultado = await respuesta.json();
 
         if (respuesta.ok) {
+          if (setError) setError("");
           const tokenData = resultado.data;
           const isAdmin = tokenData.rol === "admin";
 
@@ -75,11 +80,14 @@ export function validation({
           alert(isAdmin ? "Iniciando como admin!" : "Bienvenido!");
           navigate("/");
         } else {
-          alert(resultado.error || "Credenciales incorrectas");
+          const mensaje = resultado.error || "Usuario/Contraseña incorrecta";
+          if (setError) setError(mensaje);
+          else alert(mensaje);
         }
       } catch (error) {
         console.error(error);
-        alert("Error de conexión");
+        if (setError) setError("Error de conexión");
+        else alert("Error de conexión");
       }
     };
     manejarLogin();

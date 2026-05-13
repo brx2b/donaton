@@ -10,15 +10,18 @@ export default function Login() {
     nombre: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("");
     console.log("llamando BFF: ");
     validation({
       peticion: "manejarLogin",
       datos: formData,
       navigate: navigate,
       setAdmin,
+      setError: setErrorMessage,
     });
   };
   const handleChange = (e) => {
@@ -45,6 +48,7 @@ export default function Login() {
             placeholder="Contraseña"
           />
           <button type="submit">Iniciar sesión</button>
+          {errorMessage && <p className="form-error">{errorMessage}</p>}
         </form>
       </div>
       <div id="footer">

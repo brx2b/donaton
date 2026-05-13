@@ -449,6 +449,12 @@ dar mejor uso del espacio */
   border-bottom: black solid 1px;
   box-shadow: 5px 10px 1px black;
 }
+.form-error {
+  color: #b00020;
+  font-weight: 700;
+  margin-top: 1vh;
+  text-align: center;
+}
 #botonDetalles:hover {
   color: blueviolet;
 }
