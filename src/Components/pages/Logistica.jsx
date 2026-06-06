@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../../App.css";
-import { validation, URL_BFF } from "../../utils/Validators";
+import { validation, URL_BFF } from "../../utils/Validators.jsx";
 import { BarLoader } from "react-spinners";
 const sortCarga = (carga) => {
   return [...carga].sort((a, b) => {
@@ -43,14 +43,29 @@ export default function Logistica() {
     }
   };
 
-  const handleDelete = (matricula) => {
-    if (!confirm("¿Estás seguro de eliminar este envío?")) return;
-
-    validation({
-      peticion: "eliminarLogistica",
-      datos: matricula, // ← pasas el ID
-      setEnvios: setEnvios, // ← para que recargue la lista
-    });
+  const handleDelete = async (envio) => {
+    if (!confirm("¿Estás seguro de eliminar este envío? " + envio.matricula))
+      return;
+    console.log(
+      "Eliminando envío con matrícula:",
+      envio.matricula + " " + typeof envio.matricula,
+    ); // Debug
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/logistica/${envio.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Error al eliminar envío");
+      alert("Envío eliminado ☼");
+      fetchEnvios(); // Refresh list
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const updateCarga = (index, field, value) => {
@@ -249,7 +264,7 @@ export default function Logistica() {
             </div>
             <button
               className="logistica-button logistica-delete"
-              onClick={() => handleDelete(envio.matricula)}
+              onClick={() => handleDelete(envio)}
             >
               Eliminar
             </button>
