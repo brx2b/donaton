@@ -26,13 +26,15 @@ export default function TopBar() {
 
   return (
     <>
-      <div id="TopBar">
+      <div className="flex flex-wrap flex-row mb-5 border-b-2 border-black
+        justify-between bg-[#9dbebb] text-3xl items-center p-4 gap-x-13 
+      ">
         <NavLink id="logoNav">
           <h1 id="logo" to="/">
             Donaton
           </h1>
         </NavLink>
-        <section id="opciones">
+        
           <NavLink className={"NavLink"} to="/">
             <label>Inicio</label>
           </NavLink>
@@ -55,11 +57,10 @@ export default function TopBar() {
               </NavLink>
             </>
           )}
-        </section>
-        <section id="login">
+          <section className="m-5 bg-[##77aca2]" id="login">
           {isLogged ? (
             <button
-              className="NavLink logout-button"
+              className="NavLink  "
               type="button"
               onClick={handleLogout}
             >
@@ -76,6 +77,7 @@ export default function TopBar() {
             </>
           )}
         </section>
+        
       </div>
     </>
   );

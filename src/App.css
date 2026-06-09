@@ -1,5 +1,7 @@
 /* Config global */
 @import url("https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
+
+@import "tailwindcss";
 body {
   margin: 0;
   padding: 0;
@@ -29,53 +31,24 @@ body {
   box-shadow: -1px 1px 0px black;
 }
 #logo:hover{
-  
   transition: box-shadow 0.5s ease-in;
   transition: color 0.5s ease;
   box-shadow: -5px 5px 0px black;
   color: white;
 }
-#TopBar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 3.1vh;
-  background-color: #9dbebb;
-  margin-bottom: 5vh;
-  border-bottom: black solid 1px;
-  box-shadow: 0vh 0.1vh 0.5vh 0.2vh black;
-}
-#login {
-  z-index: 40;
-  background-color: #77aca2;
-  padding: 5vh;
-  display: flex;
-  gap: 6vh;
-}
-#TopBar #opciones {
-  display: flex;
-  flex-direction: row;
-  gap: 8vh;
-}
+
 .NavLink {
   text-decoration: none;
   color: black;
-  transition: transform 0.4s linear;
-}
-.logout-button {
-  border: none;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  padding: 0;
+  transition: transform 0.4s step-start;
+  border-bottom: 3px solid transparent;
 }
 .logout-button:hover,
 .NavLink:hover,
 .NavLink:hover * {
-  color: blueviolet;
-  transform: scale(1.1);
+  color: #f4e9cd;
+  transform: scale(1.03);
+  border-bottom: 3px solid black;
 }
 
 /* Inicio */
