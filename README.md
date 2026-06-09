@@ -1,16 +1,21 @@
-# React + Vite
+# Donaton proyecto fullstack III
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+  ## Requisitos
+  - Entorno docker para ejecutar los contenedores (frontend, backend y bff)
+  - Visual studio code
+  - Node
 
-Currently, two official plugins are available:
+## Ejecutar backend -> 
+  - Clonar el repositorio que contiene los microservicios <link>https://github.com/brx2b/donaton_proyecto.git</link>
+  - Para ejecutar el backend con los microservicios se debe compilar usando el comando <code> ./mvnw clean package -DskipTests </code> dentro de la carpeta raíz de cada microservicio (incluye Eureka y Gateway).
+  - Una ves se compilen todos los microservicios se puede levantar el archivo docker compose en la carpeta raíz de los microservicios con el comando <code> docker-compose up -d --build </code>.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Ejecutar BFF
+  - Realizar build de el dockerfile de la carpeta raíz <code> docker build . -t donatonbff </code>
+  - correr la imagen <code> docker run -p 400:4000 -d --name donatonbff 'dirección de la imagen' </code> en dirección pegar la id de la imagen (puedes verla con <code>docker ps -a </code>).
+## Ejecutar frontend
+  - Realizar build de el dockerfile de la carpeta raíz <code> docker build . -t donatonfrontend </code>
+  - correr la imagen <code> docker run -p 5173:80 -d --name donatonfrontend 'dirección de la imagen' </code> en dirección pegar la id de la imagen (puedes verla con <code>docker ps -a </code>).
+  - también puedes correr el frontend con <code> npm run dev </code> (node necesario y requiere instalar npm install en la consola)
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Una ves corriendo los contenedores ir al <code> http://localhost:5173 </code>
