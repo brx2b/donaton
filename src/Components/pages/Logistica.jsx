@@ -137,9 +137,10 @@ export default function Logistica() {
     );
 
   return (
-    <div>
-      <h1 id="headerLogistica">Logística</h1>
-      <div id="tarjeta-inicial" className="logistica-form">
+    <>
+    <div className="flex flex-col items-center">
+      <h1 className="bg-white px-15 border-b-2">Logística</h1>
+      <div className="bg-white p-20 px-40 border-2">
         <h2>Registrar envío</h2>
         <form onSubmit={handleSubmit} className="logistica-form-grid">
           <div className="logistica-section">
@@ -268,14 +269,22 @@ export default function Logistica() {
             >
               Eliminar
             </button>
+            
           </div>
+          
         ))}
+        
+        
       </div>
-      <div id="footer">
+      
+      
+    </div>
+    <div id="footer">
         <footer>
           <p>Sitio web desarrollado por brx2b</p>
         </footer>
       </div>
-    </div>
+    </>
   );
+
 }

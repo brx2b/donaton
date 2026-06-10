@@ -74,9 +74,9 @@ export default function Historial() {
 
   return (
     <>
-      <div>
-        <h1 id="headerHistorial">Historial de Donaciones</h1>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2vh" }}>
+      <div className="flex flex-col items-center" >
+        <h1 className="text-center bg-white px-15 border-b-2 ">Historial de Donaciones</h1>
+        <div className="justify-center flex flex-row gap-2 flex-wrap">
           {donaciones.map((donacion) => (
             <div
               key={donacion.id}
@@ -113,12 +113,12 @@ export default function Historial() {
             </div>
           ))}
         </div>
+        
       </div>
-      <div id="footer">
-        <footer>
+      <footer id="footer">
           <p>Sitio web desarrollado por brx2b</p>
         </footer>
-      </div>
+        
     </>
   );
 }

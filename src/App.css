@@ -51,6 +51,10 @@ body {
   border-bottom: 3px solid black;
 }
 
+.textoTar{
+  text-decoration: none;
+}
+
 /* Inicio */
 #contenedor-inicial {
   display: flex;
@@ -62,14 +66,14 @@ body {
 
 
 /* logistica */
-#headerLogistica{
+/* #headerLogistica{
   border: black solid 1px;
   background-color: white;
   width: 40%;
   padding: 1vh;
   text-align: center;
   margin-left: 5vh;
-}
+} */
 #tarjeta-inicial {
   border: black solid 1px;
   width: calc(80vh / 1);
@@ -84,12 +88,12 @@ body {
   padding: 3vh;
   margin: 2vh 0;
 }
-.logistica-form {
+/* .logistica-form {
   width: calc(100% - 6vh);
   margin: 0 auto 5vh;
-  padding: 3vh;
+  padding: 1vh;
   background-color: white;
-}
+}  */
 .logistica-form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -172,26 +176,18 @@ strong {
   font-size: 3vh;
   line-height: 4vh;
 }
-#tarjetas-bajo {
-  margin-top: 8vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
 .GlareHoverStyle {
   margin: 3vh;
   width: 30vh;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s step-start;
 }
 .GlareHoverStyle:hover {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 
 /* Footer */
 #footer {
-  background-color: #9dbebb;
+  background-color: #000000;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -202,6 +198,7 @@ strong {
   font-size: 3vh;
   border-top: black solid 1px;
   box-shadow: 0vh -0.1vh 0.5vh 0.2vh rgba(0, 0, 0, 0.279);
+  color: white
 }
 
 /* Nosotros */
@@ -338,7 +335,7 @@ dar mejor uso del espacio */
   justify-self: center;
 
 }
-#headerHistorial{
+/* #headerHistorial{
   border: black solid 1px;
   background-color: white;
   width: 40%;
@@ -346,7 +343,7 @@ dar mejor uso del espacio */
   text-align: center;
   margin-left: 5vh;
   
-}
+} */
 /* LOGIN */
 #contenedor-login {
   display: flex;

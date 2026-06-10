@@ -27,7 +27,7 @@ export default function TopBar() {
   return (
     <>
       <div className="flex flex-wrap flex-row mb-5 border-b-2 border-black
-        justify-between bg-[#9dbebb] text-3xl items-center p-4 gap-x-13 
+        justify-between bg-[#9dbebb] text-3xl items-center p-4 gap-x-13 gap-y-5  
       ">
         <NavLink id="logoNav">
           <h1 id="logo" to="/">
@@ -57,7 +57,7 @@ export default function TopBar() {
               </NavLink>
             </>
           )}
-          <section className="m-5 bg-[##77aca2]" id="login">
+          <section className="flex gap-x-13 m-5 bg-[##77aca2]" id="login">
           {isLogged ? (
             <button
               className="NavLink  "
