@@ -23,6 +23,7 @@ export default function Login() {
       setAdmin,
       setError: setErrorMessage,
     });
+    localStorage.setItem("username", formData.nombre);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
