@@ -21,45 +21,57 @@ export default function TopBar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("setAdmin");
+    localStorage.removeItem("username");
     window.location.reload();
   };
 
   return (
     <>
-      <div id="TopBar">
+      <div
+        className="flex flex-wrap flex-row mb-5 border-b-2 border-black
+        justify-between bg-[#9dbebb] text-3xl items-center p-4 gap-x-13 gap-y-5  
+      "
+      >
         <NavLink id="logoNav">
           <h1 id="logo" to="/">
             Donaton
           </h1>
-        </NavLink>
-        <section id="opciones">
-          <NavLink className={"NavLink"} to="/">
-            <label>Inicio</label>
-          </NavLink>
-          <NavLink className={"NavLink"} to="/Solicitudes">
-            <label>Solicitudes</label>
-          </NavLink>
-          <NavLink className={"NavLink"} to="/Sedes">
-            <label>Sedes</label>
-          </NavLink>
-          <NavLink className={"NavLink"} to="/Nosotros">
-            <label>Nosotros</label>
-          </NavLink>
           {isAdmin && (
-            <>
-              <NavLink className={"NavLink"} to="/Historial">
-                <label>Historial</label>
-              </NavLink>
-              <NavLink className={"NavLink"} to="/Logistica">
-                <label>Logistica</label>
-              </NavLink>
-            </>
+            <label className="text-black-50 ml-5">¡Admin activo!</label>
           )}
-        </section>
-        <section id="login">
+          {isLogged && !isAdmin && (
+            <label className="text-black-50 ml-5">
+              Iniciado como {localStorage.getItem("username")}{" "}
+            </label>
+          )}
+        </NavLink>
+
+        <NavLink className={"NavLink"} to="/">
+          <label>Inicio</label>
+        </NavLink>
+        <NavLink className={"NavLink"} to="/Solicitudes">
+          <label>Solicitudes</label>
+        </NavLink>
+        <NavLink className={"NavLink"} to="/Sedes">
+          <label>Sedes</label>
+        </NavLink>
+        <NavLink className={"NavLink"} to="/Nosotros">
+          <label>Nosotros</label>
+        </NavLink>
+        {isAdmin && (
+          <>
+            <NavLink className={"NavLink"} to="/Historial">
+              <label>Historial</label>
+            </NavLink>
+            <NavLink className={"NavLink"} to="/Logistica">
+              <label>Logistica</label>
+            </NavLink>
+          </>
+        )}
+        <section className="flex gap-x-13 pr-5 bg-[##77aca2]" id="login">
           {isLogged ? (
             <button
-              className="NavLink logout-button"
+              className="border-b-7 border-transparent text-black-100 hover:text-red-400 transition-colors duration-100 hover:border-black "
               type="button"
               onClick={handleLogout}
             >

@@ -1,10 +1,9 @@
 import GlareHover from "../GlareHover";
 import { NavLink } from "react-router-dom";
 import "../../App.css";
+import fondoinicio from "../../assets/imgs/fondoinicio.jpg"
 import React from "react";
 export default function Inicio() {
-  const urlfondo =
-    "https://videocdn.cdnpk.net/videos/4eaffa96-2836-5cc3-aec7-b60bddbbab53/horizontal/thumbnails/large.jpg?semt=ais_hybrid&item_id=6457017&w=740&q=80";
   return (
     <>
       <div id="contenedor-inicial">
@@ -36,10 +35,16 @@ export default function Inicio() {
         </div>
       </div>
 
-      <div>
-        <div id="tarjetas-bajo">
-          <div style={{ height: "600px", position: "relative" }}>
-            <NavLink className={"NavLink"} to="/Nosotros">
+      <div className="relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center blur-[6px]"
+          style={{backgroundImage:`url(${fondoinicio})`}}
+        ></div>
+        <div className="mb-4 mt-4 mask-t-from-70% p-20 flex flex-row flex-wrap items-center justify-between gap-10">
+          
+          <div style={{ height: "400px", position: "relative" }}>
+            
+            <NavLink className="textoTar" to="/Nosotros">
               <GlareHover
                 className="GlareHoverStyle"
                 glareColor="#ffffff"
@@ -62,8 +67,8 @@ export default function Inicio() {
               </GlareHover>
             </NavLink>
           </div>
-          <div style={{ height: "600px", position: "relative" }}>
-            <NavLink className={"NavLink"} to="/Sedes">
+          <div style={{ height: "400px", position: "relative" }}>
+            <NavLink className="textoTar" to="/Sedes">
               <GlareHover
                 className="GlareHoverStyle"
                 glareColor="#ffffff"
@@ -86,8 +91,8 @@ export default function Inicio() {
               </GlareHover>
             </NavLink>
           </div>
-          <div style={{ height: "600px", position: "relative" }}>
-            <NavLink className={"NavLink"} to="/solicitudes">
+          <div style={{ height: "400px", position: "relative" }}>
+            <NavLink className="textoTar" to="/solicitudes">
               <GlareHover
                 className="GlareHoverStyle"
                 glareColor="#ffffff"
@@ -110,8 +115,8 @@ export default function Inicio() {
               </GlareHover>
             </NavLink>
           </div>
+          </div>
         </div>
-      </div>
 
       <div id="footer">
         <footer>

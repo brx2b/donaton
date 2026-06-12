@@ -14,7 +14,7 @@ export default function Solicitudes() {
   const [tipo, setTipo] = useState("individual");
   const [donacionStatus, setDonacionStatus] = useState(null);
   const [error, setError] = useState(null);
-
+  const [procesando, setProcesando] = useState(false);
   const [errorCarga, setErrorCarga] = useState(false);
 
   useEffect(() => {
@@ -109,6 +109,8 @@ export default function Solicitudes() {
     }
 
     try {
+      setProcesando(true);
+
       const response = await fetch(
         "http://localhost:4000/api/donaciones/donar",
         {
@@ -126,10 +128,11 @@ export default function Solicitudes() {
       );
       const data = await response.json();
       if (response.ok) {
-        setDonacionStatus("Donación registrada correctamente.");
+        setDonacionStatus("¡Donación registrada correctamente!.");
         setTimeout(() => {
           cerrarDrawer();
           cargarSolicitudes();
+          setProcesando(false);
         }, 1600);
       } else {
         setError(data.error || data || "No se pudo procesar la donación");
@@ -227,12 +230,19 @@ export default function Solicitudes() {
                     ? `${usuario.nombre} (${usuario.email})`
                     : "Cargando..."}
                 </p>
-                <button
-                  id="botonDetalles"
-                  onClick={() => abrirDrawer(solicitud)}
-                >
-                  Donar
-                </button>
+                <h5>Fecha solicitud:</h5>
+                <p2>{solicitud.fecha}</p2>
+                {isAdmin ? (
+                  <hr></hr>
+                ) : (
+                  <button
+                    id="botonDetalles"
+                    onClick={() => abrirDrawer(solicitud)}
+                  >
+                    Donar
+                  </button>
+                )}
+
                 {isAdmin && (
                   <button
                     onClick={() => handleDeleteSolicitud(solicitud.id)}
@@ -245,7 +255,7 @@ export default function Solicitudes() {
                       cursor: "pointer",
                     }}
                   >
-                    Eliminar
+                    Eliminar solicitud como admin
                   </button>
                 )}
               </div>
@@ -304,9 +314,17 @@ export default function Solicitudes() {
             value={monto}
             onChange={(e) => setMonto(e.target.value)}
           />
-          <button className="drawer-action" onClick={confirmarDonacion}>
-            Confirmar donación
-          </button>
+          {procesando ? (
+            <>
+              <BarLoader height={10} width={200} />
+              <label>Procesando donación...</label>
+            </>
+          ) : (
+            <button className="drawer-action" onClick={confirmarDonacion}>
+              Confirmar donación
+            </button>
+          )}
+
           {donacionStatus && <p className="drawer-success">{donacionStatus}</p>}
           {error && <p className="drawer-error">{error}</p>}
           <p className="drawer-note">

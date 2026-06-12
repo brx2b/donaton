@@ -74,9 +74,11 @@ export default function Historial() {
 
   return (
     <>
-      <div>
-        <h1 id="headerHistorial">Historial de Donaciones</h1>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2vh" }}>
+      <div className="flex flex-col items-center">
+        <h1 className="text-center bg-white px-15 border-b-2 ">
+          Historial de Donaciones
+        </h1>
+        <div className="justify-center flex flex-row gap-2 flex-wrap">
           {donaciones.map((donacion) => (
             <div
               key={donacion.id}
@@ -88,15 +90,13 @@ export default function Historial() {
               }}
             >
               <div>
-                <strong>Fecha:</strong> {donacion.fecha || "N/A"}
+                <h4>Fecha:</h4> {donacion.fecha}
                 <br />
-                <strong>Monto:</strong>{" "}
-                {donacion.monto ? `$${donacion.monto.toFixed(2)}` : "N/A"}
+                <h4>Monto:</h4> ${donacion.monto}
                 <br />
-                <strong>Tipo:</strong> {donacion.tipo || "N/A"}
+                <h4>Tipo:</h4> {donacion.tipo}
                 <br />
-                <strong>Usuario ID:</strong>{" "}
-                {donacion.usuarioId || donacion.usuarioID || "N/A"}
+                <h4>Usuario id:</h4> {donacion.usuarioId}
               </div>
               <button
                 onClick={() => handleDelete(donacion.id)}
@@ -114,11 +114,9 @@ export default function Historial() {
           ))}
         </div>
       </div>
-      <div id="footer">
-        <footer>
-          <p>Sitio web desarrollado por brx2b</p>
-        </footer>
-      </div>
+      <footer id="footer">
+        <p>Sitio web desarrollado por brx2b</p>
+      </footer>
     </>
   );
 }

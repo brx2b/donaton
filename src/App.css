@@ -1,5 +1,7 @@
 /* Config global */
 @import url("https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap");
+
+@import "tailwindcss";
 body {
   margin: 0;
   padding: 0;
@@ -29,53 +31,28 @@ body {
   box-shadow: -1px 1px 0px black;
 }
 #logo:hover{
-  
   transition: box-shadow 0.5s ease-in;
   transition: color 0.5s ease;
   box-shadow: -5px 5px 0px black;
   color: white;
 }
-#TopBar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 3.1vh;
-  background-color: #9dbebb;
-  margin-bottom: 5vh;
-  border-bottom: black solid 1px;
-  box-shadow: 0vh 0.1vh 0.5vh 0.2vh black;
-}
-#login {
-  z-index: 40;
-  background-color: #77aca2;
-  padding: 5vh;
-  display: flex;
-  gap: 6vh;
-}
-#TopBar #opciones {
-  display: flex;
-  flex-direction: row;
-  gap: 8vh;
-}
+
 .NavLink {
   text-decoration: none;
   color: black;
-  transition: transform 0.4s linear;
-}
-.logout-button {
-  border: none;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  padding: 0;
+  transition: transform 0.4s step-start;
+  border-bottom: 3px solid transparent;
 }
 .logout-button:hover,
 .NavLink:hover,
 .NavLink:hover * {
-  color: blueviolet;
-  transform: scale(1.1);
+  color: #f4e9cd;
+  transform: scale(1.02);
+  border-bottom: 3px solid black;
+}
+
+.textoTar{
+  text-decoration: none;
 }
 
 /* Inicio */
@@ -89,14 +66,14 @@ body {
 
 
 /* logistica */
-#headerLogistica{
+/* #headerLogistica{
   border: black solid 1px;
   background-color: white;
   width: 40%;
   padding: 1vh;
   text-align: center;
   margin-left: 5vh;
-}
+} */
 #tarjeta-inicial {
   border: black solid 1px;
   width: calc(80vh / 1);
@@ -111,12 +88,12 @@ body {
   padding: 3vh;
   margin: 2vh 0;
 }
-.logistica-form {
+/* .logistica-form {
   width: calc(100% - 6vh);
   margin: 0 auto 5vh;
-  padding: 3vh;
+  padding: 1vh;
   background-color: white;
-}
+}  */
 .logistica-form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -199,26 +176,18 @@ strong {
   font-size: 3vh;
   line-height: 4vh;
 }
-#tarjetas-bajo {
-  margin-top: 8vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-}
 .GlareHoverStyle {
   margin: 3vh;
   width: 30vh;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s step-start;
 }
 .GlareHoverStyle:hover {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 
 /* Footer */
 #footer {
-  background-color: #9dbebb;
+  background-color: #000000;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -229,6 +198,7 @@ strong {
   font-size: 3vh;
   border-top: black solid 1px;
   box-shadow: 0vh -0.1vh 0.5vh 0.2vh rgba(0, 0, 0, 0.279);
+  color: white
 }
 
 /* Nosotros */
@@ -243,7 +213,7 @@ strong {
 #contenedor-inicial-nosotros h1 {
   text-decoration: underline;
 }
-#tarjeta-inicial-nosotros {
+/* #tarjeta-inicial-nosotros {
   border: black solid 1px;
   width: 100vh;
   padding: 5vh;
@@ -251,8 +221,8 @@ strong {
   box-shadow: 5px 10px 0.8vh 0.5vh black;
   cursor: default;
   background-color: white;
-}
-#img-1 {
+} */
+/* #img-1 {
   position: inherit;
   width: 13vh;
   height: 13vh;
@@ -263,7 +233,7 @@ strong {
   height: 13vh;
   width: 13vh;
   margin-left: 70vh;
-}
+} */
 
 /* Sedes */
 #contenedor-sedes {
@@ -365,7 +335,7 @@ dar mejor uso del espacio */
   justify-self: center;
 
 }
-#headerHistorial{
+/* #headerHistorial{
   border: black solid 1px;
   background-color: white;
   width: 40%;
@@ -373,7 +343,7 @@ dar mejor uso del espacio */
   text-align: center;
   margin-left: 5vh;
   
-}
+} */
 /* LOGIN */
 #contenedor-login {
   display: flex;
@@ -387,6 +357,7 @@ dar mejor uso del espacio */
   padding: 15vh;
   flex-direction: column;
   align-items: center;
+  
 }
 #formulario-login {
   display: flex;
