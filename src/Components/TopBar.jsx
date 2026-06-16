@@ -8,21 +8,31 @@ export default function TopBar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token == null) {
-      console.log("NO LOGING");
       setIsLogged(false);
       setIsAdmin(false);
     } else {
-      console.log("SI LOGIN");
       setIsLogged(true);
       const admin = localStorage.getItem("setAdmin");
       setIsAdmin(admin === "true");
     }
   }, [location]);
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("setAdmin");
-    localStorage.removeItem("username");
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      // 1. Le avisamos al BFF que destruya la cookie HttpOnly
+      await fetch("http://localhost:4000/api/usuarios/logout", {
+        method: "POST",
+        credentials: "include", // 🔥 CRUCIAL: Para que el BFF sepa qué cookie borrar
+      });
+    } catch (error) {
+      console.error("Error al avisar del logout al servidor:", error);
+    } finally {
+      localStorage.removeItem("rol");
+      localStorage.removeItem("setAdmin");
+      localStorage.removeItem("username");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      window.location.href = "/";
+    }
   };
 
   return (

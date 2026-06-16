@@ -14,11 +14,16 @@ export function validation({
 }) {
   const token = localStorage.getItem("token");
 
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  if (token && peticion !== "manejarLogin" && peticion !== "manejarRegistro") {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const config = {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
+    headers,
+    credentials: "include",
   };
 
   // ====================== REGISTRO ======================
@@ -62,18 +67,20 @@ export function validation({
         });
 
         const resultado = await respuesta.json();
-
+        console.log(resultado);
         if (respuesta.ok) {
           if (setError) setError("");
           const tokenData = resultado.data;
           const isAdmin = tokenData.rol === "admin";
 
-          // === CORRECCIÓN IMPORTANTE ===
+          localStorage.setItem("userId", tokenData.id);
+          localStorage.setItem("token", tokenData.token);
+          localStorage.setItem("rol", tokenData.rol || "usuario");
           localStorage.setItem(
-            "token",
-            (isAdmin ? "adm" : "usr") + tokenData.id,
+            "username",
+            tokenData.nombre || tokenData.usuario,
           );
-          localStorage.setItem("setAdmin", isAdmin ? "true" : "false"); // ← Esta línea faltaba
+          localStorage.setItem("setAdmin", isAdmin ? "true" : "false");
 
           setAdmin(isAdmin);
 
@@ -99,7 +106,10 @@ export function validation({
       try {
         const respuesta = await fetch(`${URL_BFF}/api/donaciones/donar`, {
           method: "POST",
-          ...config,
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(datos),
         });
 
