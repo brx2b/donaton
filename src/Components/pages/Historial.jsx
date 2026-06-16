@@ -13,22 +13,33 @@ export default function Historial() {
 
   const fetchDonaciones = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const isAdmin = localStorage.getItem("setAdmin") === "true";
+      if (isAdmin == false && token == null) {
+        setError("No tienes permiso para ver esta página");
+        return;
+      }
       const response = await fetch(`${URL_BFF}/api/donaciones`, {
+        method: "GET",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         },
       });
       if (!response.ok) throw new Error("Error al obtener donaciones");
       const data = await response.json();
       setDonaciones(data.data || []);
     } catch (err) {
-      setError(err.message);
+      setError("Verifica la conexión con el servidor");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
+    if (localStorage.getItem("setAdmin") !== "true") {
+      alert();
+    }
     if (!confirm("¿Estás seguro de eliminar esta donación?")) return;
     try {
       const response = await fetch(`${URL_BFF}/api/donaciones/${id}`, {
@@ -38,7 +49,7 @@ export default function Historial() {
         },
       });
       if (!response.ok) throw new Error("Error al eliminar donación");
-      fetchDonaciones(); // Refresh list
+      fetchDonaciones(); // actualizar
     } catch (err) {
       alert(err.message);
     }
@@ -62,7 +73,7 @@ export default function Historial() {
     return (
       <>
         <div className="cargandoScreen">
-          <h1>Error al cargar, Verifica la conexión del servidor</h1>
+          <h1>{error}</h1>
         </div>
         <div id="footer">
           <footer>
