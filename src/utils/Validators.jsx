@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const URL_BFF = "http://10.0.140.143:4000";
+export const URL_BFF = "http://13.222.223.222:4000";
 
 export function validation({
   peticion,
