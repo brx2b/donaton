@@ -30,7 +30,7 @@ export function validation({
   if (peticion === "manejarRegistro") {
     const ejecutarRegistro = async () => {
       try {
-        const respuesta = await fetch(`${URL_BFF}/usuarios/nuevoUsuario`, {
+        const respuesta = await fetch(`${URL_BFF}/api/usuarios/nuevoUsuario`, {
           method: "POST",
           ...config,
           body: JSON.stringify(datos),
@@ -60,7 +60,7 @@ export function validation({
   else if (peticion === "manejarLogin") {
     const manejarLogin = async () => {
       try {
-        const respuesta = await fetch(`${URL_BFF}/usuarios/login`, {
+        const respuesta = await fetch(`${URL_BFF}/api/usuarios/login`, {
           method: "POST",
           ...config,
           body: JSON.stringify(datos),
