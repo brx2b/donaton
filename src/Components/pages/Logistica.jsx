@@ -28,9 +28,18 @@ export default function Logistica() {
 
   const fetchEnvios = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const isAdmin = localStorage.getItem("setAdmin") === "true";
+      if (isAdmin == false || token == null) {
+        setError("No tienes permiso para ver esta página");
+        return;
+      }
+
       const response = await fetch(`${URL_BFF}/api/logistica`, {
+        method: "GET",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         },
       });
       if (!response.ok) throw new Error("Error al obtener envíos");
@@ -55,8 +64,9 @@ export default function Logistica() {
         `http://localhost:4000/api/logistica/${envio.id}`,
         {
           method: "DELETE",
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
         },
       );
@@ -126,7 +136,7 @@ export default function Logistica() {
     return (
       <>
         <div className="cargandoScreen">
-          <h1>Error al cargar, Verifica la conexión del servidor</h1>
+          <h1>{error}</h1>
         </div>
         <div id="footer">
           <footer>
@@ -137,145 +147,149 @@ export default function Logistica() {
     );
 
   return (
-    <div>
-      <h1 id="headerLogistica">Logística</h1>
-      <div id="tarjeta-inicial" className="logistica-form">
-        <h2>Registrar envío</h2>
-        <form onSubmit={handleSubmit} className="logistica-form-grid">
-          <div className="logistica-section">
-            <label className="logistica-label">Carga</label>
-            {newEnvio.carga.map((item, index) => (
-              <div key={index} className="logistica-item-row">
-                <input
-                  type="text"
-                  placeholder="Nombre item"
-                  value={item.nombre}
-                  onChange={(e) => updateCarga(index, "nombre", e.target.value)}
-                  required
-                  className="logistica-input"
-                />
-                <input
-                  type="number"
-                  placeholder="Cantidad"
-                  value={item.cantidad}
-                  min="1"
-                  onChange={(e) =>
-                    updateCarga(index, "cantidad", e.target.value)
-                  }
-                  required
-                  className="logistica-input logistica-input-small"
-                />
-                {newEnvio.carga.length > 1 && (
-                  <button
-                    type="button"
-                    className="logistica-remove"
-                    onClick={() => removeItem(index)}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              className="logistica-add-item"
-              onClick={addItem}
-            >
-              + Añadir item
-            </button>
-          </div>
-
-          <div className="logistica-section logistica-fieldset">
-            <label className="logistica-label">Chofer</label>
-            <input
-              type="text"
-              value={newEnvio.chofer}
-              onChange={(e) =>
-                setNewEnvio({ ...newEnvio, chofer: e.target.value })
-              }
-              required
-              className="logistica-input"
-            />
-            <label className="logistica-label">Destino</label>
-            <input
-              type="text"
-              value={newEnvio.destino}
-              onChange={(e) =>
-                setNewEnvio({ ...newEnvio, destino: e.target.value })
-              }
-              required
-              className="logistica-input"
-            />
-            <label className="logistica-label">Matrícula</label>
-            <input
-              type="text"
-              value={newEnvio.matricula}
-              onChange={(e) =>
-                setNewEnvio({ ...newEnvio, matricula: e.target.value })
-              }
-              required
-              className="logistica-input"
-            />
-            <label className="logistica-label">Origen</label>
-            <input
-              type="text"
-              value={newEnvio.origen}
-              onChange={(e) =>
-                setNewEnvio({ ...newEnvio, origen: e.target.value })
-              }
-              required
-              className="logistica-input"
-            />
-            <button type="submit" className="logistica-button">
-              Registrar envío
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <div className="logistica-list">
-        {envios.map((envio) => (
-          <div
-            key={envio.matricula || envio.id}
-            id="tarjeta-inicial"
-            className="logistica-card"
-          >
-            <div>
-              <p>
-                <strong>Chofer:</strong> {envio.chofer || "N/A"}
-              </p>
-              <p>
-                <strong>Destino:</strong> {envio.destino || "N/A"}
-              </p>
-              <p>
-                <strong>Matrícula:</strong> {envio.matricula || "N/A"}
-              </p>
-              <p>
-                <strong>Origen:</strong> {envio.origen || "N/A"}
-              </p>
-              <p>
-                <strong>Carga:</strong>{" "}
-                {envio.carga
-                  ? envio.carga
-                      .map((item) => `${item.nombre} ${item.cantidad}`)
-                      .join(", ")
-                  : "N/A"}
-              </p>
+    <>
+      <div className="flex flex-col items-center">
+        <h1 className="bg-white px-15 border-b-2">Logística</h1>
+        <div className="bg-white p-20 px-40 border-2">
+          <h2>Registrar envío</h2>
+          <form onSubmit={handleSubmit} className="logistica-form-grid">
+            <div className="logistica-section">
+              <label className="logistica-label">Carga</label>
+              {newEnvio.carga.map((item, index) => (
+                <div key={index} className="logistica-item-row">
+                  <input
+                    type="text"
+                    placeholder="Nombre item"
+                    value={item.nombre}
+                    onChange={(e) =>
+                      updateCarga(index, "nombre", e.target.value)
+                    }
+                    required
+                    className="logistica-input"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Cantidad"
+                    value={item.cantidad}
+                    min="1"
+                    onChange={(e) =>
+                      updateCarga(index, "cantidad", e.target.value)
+                    }
+                    required
+                    className="logistica-input logistica-input-small"
+                  />
+                  {newEnvio.carga.length > 1 && (
+                    <button
+                      type="button"
+                      className="logistica-remove"
+                      onClick={() => removeItem(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="logistica-add-item"
+                onClick={addItem}
+              >
+                + Añadir item
+              </button>
             </div>
-            <button
-              className="logistica-button logistica-delete"
-              onClick={() => handleDelete(envio)}
+
+            <div className="logistica-section logistica-fieldset">
+              <label className="logistica-label">Chofer</label>
+              <input
+                type="text"
+                value={newEnvio.chofer}
+                onChange={(e) =>
+                  setNewEnvio({ ...newEnvio, chofer: e.target.value })
+                }
+                required
+                className="logistica-input"
+              />
+              <label className="logistica-label">Destino</label>
+              <input
+                type="text"
+                value={newEnvio.destino}
+                onChange={(e) =>
+                  setNewEnvio({ ...newEnvio, destino: e.target.value })
+                }
+                required
+                className="logistica-input"
+              />
+              <label className="logistica-label">Matrícula</label>
+              <input
+                type="text"
+                value={newEnvio.matricula}
+                onChange={(e) =>
+                  setNewEnvio({ ...newEnvio, matricula: e.target.value })
+                }
+                required
+                className="logistica-input"
+              />
+              <label className="logistica-label">Origen</label>
+              <input
+                type="text"
+                value={newEnvio.origen}
+                onChange={(e) =>
+                  setNewEnvio({ ...newEnvio, origen: e.target.value })
+                }
+                required
+                className="logistica-input"
+              />
+              <button type="submit" className="logistica-button">
+                Registrar envío
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="logistica-list">
+          {envios.map((envio) => (
+            <div
+              key={envio.matricula || envio.id}
+              id="tarjeta-inicial"
+              className="logistica-card"
             >
-              Eliminar
-            </button>
-          </div>
-        ))}
+              <div>
+                <p>
+                  <strong>Chofer:</strong> {envio.chofer || "N/A"}
+                </p>
+                <p>
+                  <strong>Destino:</strong> {envio.destino || "N/A"}
+                </p>
+                <p>
+                  <strong>Matrícula:</strong> {envio.matricula || "N/A"}
+                </p>
+                <p>
+                  <strong>Origen:</strong> {envio.origen || "N/A"}
+                </p>
+                <p>
+                  <strong>Carga:</strong>{" "}
+                  {envio.carga
+                    ? envio.carga
+                        .map((item) => `${item.nombre} ${item.cantidad}`)
+                        .join(", ")
+                    : "N/A"}
+                </p>
+              </div>
+              <button
+                className="logistica-button logistica-delete"
+                onClick={() => handleDelete(envio)}
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
       <div id="footer">
         <footer>
           <p>Sitio web desarrollado por brx2b</p>
         </footer>
       </div>
-    </div>
+    </>
   );
 }

@@ -13,22 +13,33 @@ export default function Historial() {
 
   const fetchDonaciones = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const isAdmin = localStorage.getItem("setAdmin") === "true";
+      if (isAdmin == false && token == null) {
+        setError("No tienes permiso para ver esta página");
+        return;
+      }
       const response = await fetch(`${URL_BFF}/api/donaciones`, {
+        method: "GET",
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
         },
       });
       if (!response.ok) throw new Error("Error al obtener donaciones");
       const data = await response.json();
       setDonaciones(data.data || []);
     } catch (err) {
-      setError(err.message);
+      setError("Verifica la conexión con el servidor");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
+    if (localStorage.getItem("setAdmin") !== "true") {
+      alert();
+    }
     if (!confirm("¿Estás seguro de eliminar esta donación?")) return;
     try {
       const response = await fetch(`${URL_BFF}/api/donaciones/${id}`, {
@@ -38,7 +49,7 @@ export default function Historial() {
         },
       });
       if (!response.ok) throw new Error("Error al eliminar donación");
-      fetchDonaciones(); // Refresh list
+      fetchDonaciones(); // actualizar
     } catch (err) {
       alert(err.message);
     }
@@ -62,7 +73,7 @@ export default function Historial() {
     return (
       <>
         <div className="cargandoScreen">
-          <h1>Error al cargar, Verifica la conexión del servidor</h1>
+          <h1>{error}</h1>
         </div>
         <div id="footer">
           <footer>
@@ -74,9 +85,11 @@ export default function Historial() {
 
   return (
     <>
-      <div>
-        <h1 id="headerHistorial">Historial de Donaciones</h1>
-        <div style={{ display: "flex", flexDirection: "column", gap: "2vh" }}>
+      <div className="flex flex-col items-center">
+        <h1 className="text-center bg-white px-15 border-b-2 ">
+          Historial de Donaciones
+        </h1>
+        <div className="justify-center flex flex-row gap-2 flex-wrap">
           {donaciones.map((donacion) => (
             <div
               key={donacion.id}
@@ -88,15 +101,13 @@ export default function Historial() {
               }}
             >
               <div>
-                <strong>Fecha:</strong> {donacion.fecha || "N/A"}
+                <h4>Fecha:</h4> {donacion.fecha}
                 <br />
-                <strong>Monto:</strong>{" "}
-                {donacion.monto ? `$${donacion.monto.toFixed(2)}` : "N/A"}
+                <h4>Monto:</h4> ${donacion.monto}
                 <br />
-                <strong>Tipo:</strong> {donacion.tipo || "N/A"}
+                <h4>Tipo:</h4> {donacion.tipo}
                 <br />
-                <strong>Usuario ID:</strong>{" "}
-                {donacion.usuarioId || donacion.usuarioID || "N/A"}
+                <h4>Usuario id:</h4> {donacion.usuarioId}
               </div>
               <button
                 onClick={() => handleDelete(donacion.id)}
@@ -114,11 +125,9 @@ export default function Historial() {
           ))}
         </div>
       </div>
-      <div id="footer">
-        <footer>
-          <p>Sitio web desarrollado por brx2b</p>
-        </footer>
-      </div>
+      <footer id="footer">
+        <p>Sitio web desarrollado por brx2b</p>
+      </footer>
     </>
   );
 }

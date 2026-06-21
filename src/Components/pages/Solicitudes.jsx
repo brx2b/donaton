@@ -14,18 +14,33 @@ export default function Solicitudes() {
   const [tipo, setTipo] = useState("individual");
   const [donacionStatus, setDonacionStatus] = useState(null);
   const [error, setError] = useState(null);
-
+  const [procesando, setProcesando] = useState(false);
   const [errorCarga, setErrorCarga] = useState(false);
-
+  const [mensaje, setMensaje] = useState("");
+  const sessionUsername = localStorage.getItem("username");
+  const usuarioLogeadoId = localStorage.getItem("userId");
   useEffect(() => {
-    if (session) {
+    setMensaje("¡Inicia sesión para poder visualizar las solicitudes y donar!");
+
+    if (usuarioLogeadoId) {
+      // Aquí puedes realizar una llamada rápida a tu endpoint /api/usuarios/perfil
+      // para verificar si es admin realmente en RAM. Por ahora lo dejamos vinculado
+      // para que cargue las solicitudes si detecta que hay sesión iniciada:
       cargarSolicitudes();
     }
-  }, [session]);
+  }, [usuarioLogeadoId]);
 
   const cargarSolicitudes = async () => {
     setLoading(true);
+
     try {
+      const token = localStorage.getItem("token");
+      // const isAdmin = localStorage.getItem("setAdmin") == "true";
+
+      // if (isAdmin == false) {
+      //   setMensaje("No tienes permiso para ver esta página");
+      //   return;
+      // }
       const response = await fetch(`http://localhost:4000/api/necesidades`);
       const data = await response.json();
 
@@ -53,6 +68,13 @@ export default function Solicitudes() {
         try {
           const response = await fetch(
             `http://localhost:4000/api/usuarios/${id}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            },
           );
           const data = await response.json();
           if (response.ok) {
@@ -87,13 +109,12 @@ export default function Solicitudes() {
     setError(null);
     setDonacionStatus(null);
 
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const usuarioId = localStorage.getItem("userId");
+    if (!usuarioId) {
       setError("Debe iniciar sesión para donar");
       return;
     }
 
-    const usuarioId = token.replace(/^usr/, "");
     const montoNumero = Number(monto);
     if (!montoNumero || montoNumero <= 0) {
       setError("Ingrese un monto válido mayor a 0");
@@ -109,27 +130,28 @@ export default function Solicitudes() {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:4000/api/donaciones/donar",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuarioId,
-            monto: montoNumero,
-            fecha: new Date().toISOString().slice(0, 10),
-            tipo: tipo.toUpperCase(),
-          }),
+      setProcesando(true);
+      const response = await fetch(`${URL_BFF}/api/donaciones/donar`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      );
+        body: JSON.stringify({
+          usuarioId: usuarioLogeadoId,
+          monto: montoNumero,
+          fecha: new Date().toISOString().slice(0, 10),
+          tipo: tipo.toUpperCase(),
+        }),
+      });
       const data = await response.json();
       if (response.ok) {
-        setDonacionStatus("Donación registrada correctamente.");
+        setDonacionStatus("¡Donación registrada correctamente!.");
         setTimeout(() => {
           cerrarDrawer();
           cargarSolicitudes();
+          setProcesando(false);
         }, 1600);
       } else {
         setError(data.error || data || "No se pudo procesar la donación");
@@ -146,13 +168,19 @@ export default function Solicitudes() {
 
   const handleDeleteSolicitud = async (id) => {
     if (!confirm("¿Estás seguro de eliminar esta solicitud?")) return;
+    const veradmin = localStorage.getItem("setAdmin") === "true";
+    if (!veradmin) {
+      alert("No tienes permiso para eliminar esta solicitud");
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:4000/api/necesidades/${id}`,
         {
           method: "DELETE",
+          credentials: "include",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
         },
       );
@@ -169,7 +197,7 @@ export default function Solicitudes() {
     return (
       <>
         <div>
-          <h1 id="contenedor-iniciar">Inicia sesión para ver solicitudes</h1>
+          <h1 id="contenedor-iniciar">{mensaje}</h1>
         </div>
         <div id="footer">
           <footer>
@@ -227,12 +255,19 @@ export default function Solicitudes() {
                     ? `${usuario.nombre} (${usuario.email})`
                     : "Cargando..."}
                 </p>
-                <button
-                  id="botonDetalles"
-                  onClick={() => abrirDrawer(solicitud)}
-                >
-                  Donar
-                </button>
+                <h5>Fecha solicitud:</h5>
+                <p2>{solicitud.fecha}</p2>
+                {isAdmin ? (
+                  <hr></hr>
+                ) : (
+                  <button
+                    id="botonDetalles"
+                    onClick={() => abrirDrawer(solicitud)}
+                  >
+                    Donar
+                  </button>
+                )}
+
                 {isAdmin && (
                   <button
                     onClick={() => handleDeleteSolicitud(solicitud.id)}
@@ -245,7 +280,7 @@ export default function Solicitudes() {
                       cursor: "pointer",
                     }}
                   >
-                    Eliminar
+                    Eliminar solicitud como admin
                   </button>
                 )}
               </div>
@@ -304,9 +339,17 @@ export default function Solicitudes() {
             value={monto}
             onChange={(e) => setMonto(e.target.value)}
           />
-          <button className="drawer-action" onClick={confirmarDonacion}>
-            Confirmar donación
-          </button>
+          {procesando ? (
+            <>
+              <BarLoader height={10} width={200} />
+              <label>Procesando donación...</label>
+            </>
+          ) : (
+            <button className="drawer-action" onClick={confirmarDonacion}>
+              Confirmar donación
+            </button>
+          )}
+
           {donacionStatus && <p className="drawer-success">{donacionStatus}</p>}
           {error && <p className="drawer-error">{error}</p>}
           <p className="drawer-note">
